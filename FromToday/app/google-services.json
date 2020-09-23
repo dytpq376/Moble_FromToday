@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "250491372156",
+    "firebase_url": "https://fromtoday-877ca.firebaseio.com",
+    "project_id": "fromtoday-877ca",
+    "storage_bucket": "fromtoday-877ca.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:250491372156:android:402d143f827356cdf37ff9",
+        "android_client_info": {
+          "package_name": "com.example.fromtoday"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "250491372156-crbn8m7so6qgt5gm24p94pvpol97vtq0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.fromtoday",
+            "certificate_hash": "17d0655367d281c434e7123e6c1e35e6e811bd9f"
+          }
+        },
+        {
+          "client_id": "250491372156-lcp2kskd50cno0k4p5q3eii2pdc5j16t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAnIZi6ioKT7XL-_y-Np8gnKZ4LbIm_Ws"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "250491372156-lcp2kskd50cno0k4p5q3eii2pdc5j16t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

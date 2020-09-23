@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/food"
+        android:title="Food"
+        android:icon="@drawable/food"
+        android:enabled="true"/>
+    <item
+        android:id="@+id/sleep"
+        android:title="Sleep"
+        android:icon="@drawable/sleep"
+        android:enabled="true"/>
+    <item
+        android:id="@+id/home"
+        android:title="Home"
+        android:icon="@drawable/home"
+        android:enabled="true"/>
+    <item
+        android:id="@+id/activity"
+        android:title="Activity"
+        android:icon="@drawable/run"
+        android:enabled="true"/>
+    <item
+        android:id="@+id/people"
+        android:title="People"
+        android:icon="@drawable/people"
+        android:enabled="true"/>
+</menu>

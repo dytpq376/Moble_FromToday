@@ -284,6 +284,7 @@ public class FoodDataActivity extends AppCompatActivity implements View.OnClickL
         editor.commit();
         setUserListViewAdapter();
     }
+
     @Override
     public void onBackPressed() {
         //super.onBackPressed();

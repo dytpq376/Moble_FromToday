@@ -1,11 +1,13 @@
 package com.example.fromtoday;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.kakao.auth.ApiErrorCode;
@@ -31,6 +34,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class Login extends AppCompatActivity {
+    Handler handler;
 
     private Button btn_custom_login;
     private Button btn_custom_login_out;
@@ -38,7 +42,6 @@ public class Login extends AppCompatActivity {
     private SessionCallback sessionCallback = new SessionCallback();
     Session session;
     public SharedPreferences user_Value;
-
 
     @Override
     protected void onResume() {
@@ -55,13 +58,22 @@ public class Login extends AppCompatActivity {
         btn_custom_login = (Button) findViewById(R.id.btn_custom_login);
         btn_custom_login_out = (Button) findViewById(R.id.btn_custom_login_out);
 
+
+        //if (intent.getExtras().getInt("logout") != 1)
+
+
         session = Session.getCurrentSession();
         session.addCallback(sessionCallback);
 
 
-        //session.open(AuthType.KAKAO_LOGIN_ALL,Login.this);
+        System.out.println("session value:"+Session.getCurrentSession().isOpened());
+        Log.e("session value:",""+Session.getCurrentSession().isOpened());
 
-        //Session.getCurrentSession().isOpened();
+        if(session.isOpened() ) {
+            dialogue();
+            handler = new Handler();
+            handler.postDelayed(runnable,3000);
+        }
 
         btn_custom_login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,6 +114,9 @@ public class Login extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+
+
         // 카카오톡|스토리 간편로그인 실행 결과를 받아서 SDK로 전달
         if (Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data)) {
             return;
@@ -159,4 +174,44 @@ public class Login extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "로그인 도중 오류가 발생했습니다. 인터넷 연결을 확인해주세요: "+e.toString(), Toast.LENGTH_SHORT).show();
         }
     }
+    private void getHashKey(){
+        PackageInfo packageInfo = null;
+        try {
+            packageInfo = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        if (packageInfo == null)
+            Log.e("KeyHash", "KeyHash:null");
+
+        for (Signature signature : packageInfo.signatures) {
+            try {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.d("KeyHash", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            } catch (NoSuchAlgorithmException e) {
+                Log.e("KeyHash", "Unable to get MessageDigest. signature=" + signature, e);
+            }
+        }
+    }
+        private void dialogue(){
+
+        AlertDialog.Builder dialogue = new AlertDialog.Builder(Login.this);
+        dialogue.setTitle("").setMessage("로그인중입니다.");
+        dialogue.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        AlertDialog alertDialog = dialogue.create();
+        alertDialog.show();
+
+    }
+    public Runnable runnable =new Runnable() {
+        @Override
+        public void run() {
+            session.open(AuthType.KAKAO_LOGIN_ALL,Login.this);
+        }
+    };
 }

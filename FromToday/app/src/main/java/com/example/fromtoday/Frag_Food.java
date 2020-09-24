@@ -178,27 +178,27 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public void onClick(View view) {
-        int requestCode = 0;
-        switch (view.getId()){
-            case R.id.morning:
-                requestCode = REQUESTCODE_MORNIGN;
-                break;
+            public void onClick(View view) {
+                int requestCode = 0;
+                switch (view.getId()){
+                    case R.id.morning:
+                        requestCode = REQUESTCODE_MORNIGN;
+                        break;
 
-            case R.id.afternoon:
-                requestCode = REQUESTCODE_AFTERNOON;
-                break;
+                    case R.id.afternoon:
+                        requestCode = REQUESTCODE_AFTERNOON;
+                        break;
 
-            case R.id.dinner:
-                requestCode = REQUESTCODE_DINNER;
-                break;
+                    case R.id.dinner:
+                        requestCode = REQUESTCODE_DINNER;
+                        break;
 
-            case R.id.foodclear:
-                clearFood();
-                return;
+                    case R.id.foodclear:
+                        clearFood();
+                        return;
 
-            default:
-                return;
+                    default:
+                        return;
         }
         Intent intent = new Intent(getActivity(),FoodDataActivity.class);
         startActivityForResult(intent,requestCode);

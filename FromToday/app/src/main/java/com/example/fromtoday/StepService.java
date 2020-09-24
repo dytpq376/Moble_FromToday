@@ -103,6 +103,7 @@ public class StepService extends Service implements SensorEventListener {
         return mMyBinder;
     }
 
+    // TODO :  생명주기 = onCreate() -> onStartCommand (서비스 처음 실행 시)
     @Override
     public void onCreate() {
         super.onCreate();
@@ -130,7 +131,8 @@ public class StepService extends Service implements SensorEventListener {
         Init_Data();
     }
 
-    // onStartCommand => 시작된서비스(콜백 메서드)
+    // TODO : onStartCommand => 시작된서비스(콜백 메서드)
+    // TODO : 서비스가 실행되고 있는 상태에서 또 서비스 시작을 할 경우 onStartCommand()함수를 탑
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
@@ -158,11 +160,9 @@ public class StepService extends Service implements SensorEventListener {
         return START_STICKY;
     }
 
+    // TODO : NotificationCompat.Builder 개체를 사용하여 콘텐츠와 채널을 설정
     public void initializeNotification() {
-        /*
-         * 알림창 생성, 채널 지정
-         * NotificationCompat.Builder 개체를 사용하여 콘텐츠와 채널을 설정
-         */
+        // 알림창 생성, 채널 지정
         NotificationCompat.Builder builder = new
                 NotificationCompat.Builder(this, "1");
 
@@ -205,6 +205,7 @@ public class StepService extends Service implements SensorEventListener {
         startForeground(1, notification);
     }
 
+    // TODO : 서비스를 종료 시켰을 경우
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -227,7 +228,7 @@ public class StepService extends Service implements SensorEventListener {
      * onUnbind()메서드를 이용하여 서비스와 컴포넌트의 바인딩을 해제제
      */
 /*
-
+    // 바인드 서비스를 종료 시켰을 경우
     @Override
     public boolean onUnbind(Intent intent) {
         unRegistManager();
@@ -236,7 +237,7 @@ public class StepService extends Service implements SensorEventListener {
         return super.onUnbind(intent);
     }
 
-    //혹시 모를 에러상황에 트라이 캐치
+    // 혹시 모를 에러상황에 트라이 캐치
     public void unRegistManager() {
         try {
             sensorManager.unregisterListener(this);
@@ -247,13 +248,18 @@ public class StepService extends Service implements SensorEventListener {
 
 */
 
+    //---------------------------------------------------------------------------------------------
+    // TODO : Handler (걸음수 생성 및 초기화)
+    //---------------------------------------------------------------------------------------------
+    // 다른 클래스의 핸들러 메세지를 받아 핸들러에 전달.
     private void Init_Data() {
         alarmSetData.Init_Data(Hdl_StepDetect);
     }
 
-    //---------------------------------------------------------------------------------------------
-    // Handler
-    //---------------------------------------------------------------------------------------------
+    // 전역 변수(Test)
+    int Monday_step;
+
+    // Handler 선언 후 사용
     Handler Hdl_StepDetect = new Handler(Looper.myLooper()) {
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -276,13 +282,7 @@ public class StepService extends Service implements SensorEventListener {
                     // (스텝 간격 < 멈춰있다는 기준시간) 경우에만 시간, 스텝 수 측정
                     if (interval_Step < TIME_STOP_WAITING_STEP) {
                         // ============================== 걸음수 증가 ==============================
-                        mStepDetector++;
-                        /*step_Value = getSharedPreferences("step_Value", MODE_PRIVATE);
-                        SharedPreferences.Editor editor = step_Value.edit();
-                        editor.putInt("stepCount", mStepDetector);
-                        editor.commit();
-                        int stepCount = step_Value.getInt("stepCount", 0);
-                        System.out.println("stepCountValue:  " + stepCount);*/
+                        singleStepService.mStepDetector++;
 
                         // ==================== 활동 시간, 이동거리, 칼로리 측정 ====================
 
@@ -290,22 +290,22 @@ public class StepService extends Service implements SensorEventListener {
                         minute = (int) (totalSeconds / 60.0);
                         second = (int) (totalSeconds);
                         second = second % 60;
-                        Log.e("스텝 디텍터", "" + mStepDetector);
+                        Log.e("스텝 디텍터", "" + singleStepService.mStepDetector);
 
                         kilometer = (minute * KM_PER_MIN);
                         kcal = (int) (minute * KCAL_PER_MINUTE);
 
                         // ======================= 콜백으로 Frag_Home 에 전달 =======================
                         if (callback != null)
-                            callback.onStepCallback(mStepDetector, kcal, kilometer, minute, second);
+                            callback.onStepCallback(singleStepService.mStepDetector, kcal, kilometer, minute, second);
                     }
                     break;
 
                 case SEND_INIT :
 
-                    Monday_step = mStepDetector;
+                    Monday_step = singleStepService.mStepDetector;
 
-                    mStepDetector = 0;
+                    singleStepService.mStepDetector = 0;
                     kcal = 0;
                     kilometer = 0;
                     minute = 0;
@@ -313,12 +313,12 @@ public class StepService extends Service implements SensorEventListener {
 
                     Log.i("jenn", "Hdl_StepDetect : SEND_INIT,  call back:" + callback);
                     Log.e("Monday_step : ", "" + Monday_step);
-                    Log.e("mStepDetector : ", "" + mStepDetector);
+                    Log.e("mStepDetector : ", "" + singleStepService.mStepDetector);
 
                     // ======================= 콜백으로 Frag_Home 에 전달 =======================
                     if (callback != null) {
                     Log.i("jenn", "callback != null 들어옴 ");
-                    callback.onStepCallback(mStepDetector, kcal, kilometer, minute, second);
+                    callback.onStepCallback(singleStepService.mStepDetector, kcal, kilometer, minute, second);
                 }
                     break;
 
@@ -326,7 +326,8 @@ public class StepService extends Service implements SensorEventListener {
             super.handleMessage(msg);
         }
     };
-int Monday_step;
+
+    // TODO : 센서 발생시 어떤 센서가 발생됬는지 판단(핸들러 메세지 전달)
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_STEP_DETECTOR) {

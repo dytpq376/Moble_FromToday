@@ -23,6 +23,7 @@ import com.dinuscxj.progressbar.CircleProgressBar;
 import org.eazegraph.lib.charts.BarChart;
 import org.eazegraph.lib.charts.PieChart;
 import org.eazegraph.lib.models.BarModel;
+import org.greenrobot.eventbus.EventBus;
 
 // 센서로부터의 값을 받아 올 수 있도록 class 에 SensorEventListener 를 implements 시켜준다.
 // onSensorChanged()와 onAccuracyChanged() 함수를 override 할 수 있다.
@@ -102,6 +103,8 @@ public class Frag_Home extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.frag_home, container, false);
+/*        // EventBus
+        EventBus.getDefault().register( this );*/
 
         // -----------------------------------------------------------------------------------------
         // PNG 파일 색상 바꾸기
@@ -155,6 +158,10 @@ public class Frag_Home extends Fragment {
         chartWalk = (PieChart)view.findViewById(R.id.tab1_chart_1);
         setPieChart();
 */
+
+        Intent intent = new Intent(getActivity(), StepService.class);
+        getActivity().startService(intent);
+
         return view;
     }
 
@@ -162,8 +169,8 @@ public class Frag_Home extends Fragment {
     public void onResume() {
         super.onResume();
 
-        intent = new Intent(getActivity(), StepService.class);
-        getActivity().startService(intent);
+        Intent intent = new Intent(getActivity(), StepService.class);
+//        getActivity().startService(intent);
         getActivity().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
 
         updateViewByReceivedData();

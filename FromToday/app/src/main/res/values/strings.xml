@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">FromToday</string>
+    <string name="kakao_app_key">8667f8f834c8f1dd82a4bc2a7c03ead7</string>
 </resources>

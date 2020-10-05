@@ -5,10 +5,12 @@
     <!-- AlarmManager -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <!-- 파이어베이스 SDK -->
+    <!-- 인터넷 접근권한 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- Background Service -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <!-- 음성 접근권한 -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
 
     <application
         android:name=".GlobalApplication"
@@ -20,7 +22,7 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.kakao.sdk.AppKey"
-            android:value="8667f8f834c8f1dd82a4bc2a7c03ead7" />
+            android:value="63085bdf6feba55b663cb64228b86b58" />
         <activity android:name=".Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,6 +34,7 @@
         <activity android:name=".MainActivity"></activity>
         <activity android:name=".MyInfoActivity"></activity>
         <activity android:name=".FoodDataActivity"></activity>
+        <activity android:name=".Stt"></activity>
 
         <!-- Alarm Activity -->
         <activity android:name=".AlarmActivity"/>

@@ -135,8 +135,8 @@ public class Frag_People extends Fragment {
                             @Override
                             // 로그아웃 완료시 호출되는 함수
                             public void onCompleteLogout() {
-                                Intent intent =new Intent(getActivity(), Login.class);
-                                startActivity(intent);
+//                                Intent intent =new Intent(getActivity(), Login.class);
+//                                startActivity(intent);
                                 getActivity().finish();
                             }
                         });

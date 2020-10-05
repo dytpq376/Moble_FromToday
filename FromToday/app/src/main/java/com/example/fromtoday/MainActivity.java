@@ -2,7 +2,9 @@ package com.example.fromtoday;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -11,6 +13,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -44,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
     private Frag_People fragPeople;
 
     private ImageView info;
+    private ImageView menu;
+    private Stt stt;
     public SharedPreferences user_Value;
 
     // AlarmManager
@@ -63,13 +68,23 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference mPostReference;
     FirebasePost post;
 
+    public SharedPreferences text_result;
+
+    String food = "식단";
+    String home = "홈";
+    String main = "메인";
+    String sleep = "수면";
+    String activity = "운동";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         info = findViewById(R.id.info);
+        menu = findViewById(R.id.menu);
         currentUser();
+
 
         // db에 저장할 시간과 분
         int getHourTimePicker = 0;
@@ -175,6 +190,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogue();
+
+            }
+        });
+
         // BackPressedForFinish 객체를 생성한다.
         backPressedForFinish = new BackPressedForFinish(this);
 
@@ -275,12 +298,57 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void getText(){
+
+//            text_result = getSharedPreferences("result",MODE_PRIVATE);
+//            SharedPreferences.Editor editor = text_result.edit();
+//            String strResult = text_result.getString("result",null);
+//            System.out.println("maintext : " + strResult);
+//
+//        if(strResult.equals(move)) {
+//            setFrag(0);
+//            if(strResult!= null) {
+//                editor.remove("result");
+//            }
+//        }
+//        else {
+//            finish();
+//        }
+        String text_result;
+        Intent intent = getIntent();
+        text_result = intent.getStringExtra("result");
+        Log.e("qqqqqqqqqqqqqqqqqq","qqqqqqqqqqqqqqqqq"+text_result);
+
+
+        if(text_result != null) {
+            if(text_result.contains(food) == true) {
+                setFrag(0);
+                bottomNavigationView.setSelectedItemId(R.id.food);
+            }
+            if(text_result.contains(sleep) == true) {
+                setFrag(1);
+                bottomNavigationView.setSelectedItemId(R.id.sleep);
+            }
+            if(text_result.contains(home)||text_result.contains(main) == true){
+                setFrag(2);
+                bottomNavigationView.setSelectedItemId(R.id.home);
+            }
+            if(text_result.contains(activity) == true) {
+                setFrag(0);
+                bottomNavigationView.setSelectedItemId(R.id.activity);
+            }
+
+        }
+
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
         Intent intent = getIntent();
         int receiveCount = intent.getIntExtra("receiveCount",0);
         System.out.println("receiveCount value:"+receiveCount);
+        getText();
     }
 
     @Override
@@ -288,6 +356,45 @@ public class MainActivity extends AppCompatActivity {
 
         // BackPressedForFinish 클래시의 onBackPressed() 함수를 호출한다.
         backPressedForFinish.onBackPressed();
+    }
+
+
+    private void dialogue(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+
+        builder.setTitle("음성인식").setMessage("실행하시겠습니까?");
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(getApplicationContext(), Stt.class);
+                startActivity(intent);
+
+
+
+
+            }
+
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialog, int id)
+            {
+                Toast.makeText(getApplicationContext(), "Cancel Click", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+//        text_result = getSharedPreferences("result",MODE_PRIVATE);
+//
+//        String strResult = text_result.getString("result",null);
+//
+//        Log.d("Maintext",strResult);
+
     }
 
 

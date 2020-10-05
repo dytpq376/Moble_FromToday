@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">FromToday</string>
+    <string name="tap_on_mic">마이크를 눌러 말해주세요</string>
 </resources>

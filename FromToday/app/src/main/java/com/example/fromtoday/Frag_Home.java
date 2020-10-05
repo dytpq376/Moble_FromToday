@@ -73,7 +73,7 @@ public class Frag_Home extends Fragment {
 
             Log.i("jenn", "serviceConnection :onServiceConnected " );
 
-            Toast.makeText(getActivity(), "예스바인딩", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), "예스바인딩", Toast.LENGTH_SHORT).show();
             StepService.MyBinder mb = (StepService.MyBinder) service;
             stepService = mb.getService();
             stepService.setCallback(stepCallback);

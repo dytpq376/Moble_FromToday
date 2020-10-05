@@ -27,9 +27,9 @@ public class MainActivity extends AppCompatActivity {
     //화면 상수 값 지정
     private static final int FRAGMENT_FOOD = 0;
     private static final int FRAGMENT_SLEEP = 1;
-    private static final int FRAGMENT_HOME=2;
-    private static final int FRAGMENT_ACTIVITY=3;
-    private static final int FRAGMENT_PEOPLE=4;
+    private static final int FRAGMENT_HOME = 2;
+    private static final int FRAGMENT_ACTIVITY = 3;
+    private static final int FRAGMENT_PEOPLE = 4;
 
     // 네비게이션 사용을 위한 선언
     private BottomNavigationView bottomNavigationView; // 바텀 네비게이션 뷰

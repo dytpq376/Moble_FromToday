@@ -23,7 +23,7 @@ import com.dinuscxj.progressbar.CircleProgressBar;
 import org.eazegraph.lib.charts.BarChart;
 import org.eazegraph.lib.charts.PieChart;
 import org.eazegraph.lib.models.BarModel;
-import org.greenrobot.eventbus.EventBus;
+
 
 // 센서로부터의 값을 받아 올 수 있도록 class 에 SensorEventListener 를 implements 시켜준다.
 // onSensorChanged()와 onAccuracyChanged() 함수를 override 할 수 있다.

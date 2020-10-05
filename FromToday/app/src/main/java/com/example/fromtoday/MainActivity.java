@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
         info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), MyInfoActivity.class);
+                Intent intent = new Intent(getApplicationContext(), GoogleMapActivity.class);
                 startActivity(intent);
             }
         });

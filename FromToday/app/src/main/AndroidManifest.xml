@@ -2,24 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.fromtoday">
-
+    <!-- google Map -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <!-- AlarmManager -->
-    <!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
-    <!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
-    <!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
-    <!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
-    <!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
-    <!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
-    <!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
-    <!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
-    <!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
-    <!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
-    <!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
-    <!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
-    <!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
-    <!--    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />-->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <!-- 파이어베이스 SDK -->

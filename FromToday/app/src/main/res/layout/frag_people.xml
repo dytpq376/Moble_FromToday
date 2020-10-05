@@ -247,6 +247,8 @@
                 </androidx.cardview.widget.CardView>
             </LinearLayout>
 
+
+
             <ImageView
                 android:id="@+id/back"
                 android:layout_width="40dp"

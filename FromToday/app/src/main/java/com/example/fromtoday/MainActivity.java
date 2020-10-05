@@ -53,9 +53,9 @@ public class MainActivity extends AppCompatActivity {
 
     // AlarmManager
     private static final int REQUEST_CODE = 3333;
-    private static final int ALARM_HOUR = 0;
-    private static final int ALARM_MIN = 10;
-    private static final int ALARM_SECOND = 50;
+    private static final int ALARM_HOUR = 10;
+    private static final int ALARM_MIN = 12;
+    private static final int ALARM_SECOND = 30;
 
     AlarmManager alarmMgr;
     PendingIntent pendingIntent;
@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
         info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), MyInfoActivity.class);
+                Intent intent = new Intent(getApplicationContext(), GoogleMapActivity.class);
                 startActivity(intent);
             }
         });
@@ -353,7 +353,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
         // BackPressedForFinish 클래시의 onBackPressed() 함수를 호출한다.
         backPressedForFinish.onBackPressed();
     }

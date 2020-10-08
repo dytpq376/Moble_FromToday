@@ -51,6 +51,7 @@
         </receiver>
         <!-- Foreground Service -->
         <service android:name=".StepService" />
+        <service android:name=".FoodService"/>
         <receiver android:name="AlarmReceiver"/>
 
     </application>

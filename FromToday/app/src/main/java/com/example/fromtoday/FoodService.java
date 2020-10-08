@@ -9,10 +9,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
@@ -92,9 +88,6 @@ public class FoodService extends Service {
         super.onCreate();
 
         Log.i("geon", "StepService : onCreate");
-
-        alarmSetData = new AlarmSetData();
-        Init_Data();
     }
 
     // TODO : onStartCommand => 시작된서비스(콜백 메서드)
@@ -193,12 +186,6 @@ public class FoodService extends Service {
     //---------------------------------------------------------------------------------------------
     // TODO : Handler (걸음수 생성 및 초기화)
     //---------------------------------------------------------------------------------------------
-    // 다른 클래스의 핸들러 메세지를 받아 핸들러에 전달.
-    private void Init_Data() {
-        alarmSetData.Init_Data(FoodMessage);
-    }
-
-
     // Handler 선언 후 사용
     Handler FoodMessage = new Handler(Looper.myLooper()) {
         @Override

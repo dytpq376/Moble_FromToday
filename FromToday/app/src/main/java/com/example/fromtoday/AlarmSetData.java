@@ -16,7 +16,8 @@ public class AlarmSetData extends BroadcastReceiver {
     private static PowerManager.WakeLock sCpuWakeLock;
     private static WifiManager.WifiLock sWifiLock;
     private static ConnectivityManager manager;
-
+    // food service
+    private FoodService foodService = new FoodService();
     @Override
     public void onReceive(Context context, Intent intent) {
 
@@ -42,9 +43,14 @@ public class AlarmSetData extends BroadcastReceiver {
 
         // ====================================== Data Set ========================================
         // StepService 에 초기화 메세지 전달
-        Intent mIntent = new Intent(context, StepService.class);
-        mIntent.putExtra("SEND_INIT","2");
-        context.startService(mIntent);
+        Intent sIntent = new Intent(context, StepService.class);
+        sIntent.putExtra("SEND_INIT","2");
+        context.startService(sIntent);
+
+        foodService.FoodMessage.sendEmptyMessage(foodService.FOOD_KCAL);
+        Intent fIntent = new Intent(context, FoodService.class);
+        fIntent.putExtra("SEND_INIT","2");
+        context.startService(fIntent);
 
         Toast.makeText(context,"알람 발생", Toast.LENGTH_SHORT).show();
 

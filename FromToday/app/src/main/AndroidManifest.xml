@@ -40,6 +40,7 @@
         <activity android:name=".MyInfoActivity"></activity>
         <activity android:name=".FoodDataActivity"></activity>
         <activity android:name=".GoogleMapActivity"></activity>
+        <activity android:name=".Stt"></activity>
         <!-- Alarm Activity -->
         <activity android:name=".AlarmActivity"/>
         <!-- Alarm Manager -->
@@ -51,6 +52,7 @@
 
         <!-- Foreground Service -->
         <service android:name=".StepService" />
+        <service android:name=".FoodService"/>
         <receiver android:name="AlarmReceiver"/>
 
 

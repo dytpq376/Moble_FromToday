@@ -6,13 +6,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import static android.content.Context.WIFI_SERVICE;
 
 public class AlarmSetData extends BroadcastReceiver {
+    public static String alarmMessage;
 
     Context context;
     //PowerManager.WakeLock 빈객체 선언한다.
@@ -24,9 +27,12 @@ public class AlarmSetData extends BroadcastReceiver {
     public Handler handler = null;
 
 
+
    SharedPreferences step_Value;
     // ===========================================================
     StepService stepService = StepService.getInstance();
+    Frag_Food food = new Frag_Food();
+    FoodService foodService = FoodService.getInstance();
 //    StepService stepService = new StepService();
 
     public static final int SEND_INIT = 2;
@@ -63,6 +69,13 @@ public class AlarmSetData extends BroadcastReceiver {
 
         stepService.Hdl_StepDetect.sendEmptyMessage(stepService.SEND_INIT);
 
+
+
+        foodService.FoodMessage.sendEmptyMessage(foodService.FOOD_KCAL);
+        Intent mIntent = new Intent(context, FoodService.class);
+        mIntent.putExtra("SEND_INIT","2");
+
+        context.startService(mIntent);
 /*
         context.StepService(new Intent(context, StepService.class));
 */

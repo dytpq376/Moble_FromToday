@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,6 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
+
     //화면 상수 값 지정
     private static final int FRAGMENT_FOOD = 0;
     private static final int FRAGMENT_SLEEP = 1;
@@ -53,9 +55,9 @@ public class MainActivity extends AppCompatActivity {
 
     // AlarmManager
     private static final int REQUEST_CODE = 3333;
-    private static final int ALARM_HOUR = 10;
-    private static final int ALARM_MIN = 12;
-    private static final int ALARM_SECOND = 30;
+    private static final int ALARM_HOUR = 9;
+    private static final int ALARM_MIN = 58;
+    private static final int ALARM_SECOND = 10;
 
     AlarmManager alarmMgr;
     PendingIntent pendingIntent;
@@ -200,6 +202,8 @@ public class MainActivity extends AppCompatActivity {
 
         // BackPressedForFinish 객체를 생성한다.
         backPressedForFinish = new BackPressedForFinish(this);
+
+
 
     }
 
@@ -349,6 +353,11 @@ public class MainActivity extends AppCompatActivity {
         int receiveCount = intent.getIntExtra("receiveCount",0);
         System.out.println("receiveCount value:"+receiveCount);
         getText();
+
+        Intent fIntent = new Intent(this, FoodService.class);
+        startService(fIntent);
+        bindService(fIntent, fragFood.serviceConnection, Context.BIND_AUTO_CREATE);
+
     }
 
     @Override

@@ -52,17 +52,18 @@ public class MainActivity extends AppCompatActivity {
 
     private ImageView info;
     private ImageView menu;
-    private Stt stt;
     public SharedPreferences user_Value;
 
     private BackPressedForFinish backPressedForFinish;
 
+    //파이어베이스 선언
     private DatabaseReference mPostReference;
     private DatabaseReference databaseReference;
     FirebasePost post;
 
     public SharedPreferences text_result;
 
+    //음성인식에 사용하는 문자들
     String food = "식단";
     String home = "홈";
     String main = "메인";
@@ -319,6 +320,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    //다이얼로그로 음성인식 실행
     private void dialogue(){
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 

@@ -2,27 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.fromtoday">
-
+    <!-- Google Map API -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <!-- AlarmManager -->
-    <!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
-    <!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
-    <!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
-    <!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
-    <!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
-    <!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
-    <!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
-    <!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
-    <!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
-    <!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
-    <!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
-    <!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
-    <!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
-    <!--    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />-->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <!-- 파이어베이스 SDK -->
+    <!-- 인터넷 접근 권한 허용 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- Background Service -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
@@ -49,11 +35,12 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter></activity>
-
+        <!-- Activity 이동-->
         <activity android:name=".MainActivity"></activity>
         <activity android:name=".MyInfoActivity"></activity>
         <activity android:name=".FoodDataActivity"></activity>
         <activity android:name=".GoogleMapActivity"></activity>
+        <activity android:name=".Stt"></activity>
         <!-- Alarm Activity -->
         <activity android:name=".AlarmActivity"/>
         <!-- Alarm Manager -->
@@ -62,11 +49,9 @@
                 <action android:name="android.intent.action.sec" />
             </intent-filter>
         </receiver>
-
         <!-- Foreground Service -->
         <service android:name=".StepService" />
         <receiver android:name="AlarmReceiver"/>
-
 
     </application>
 

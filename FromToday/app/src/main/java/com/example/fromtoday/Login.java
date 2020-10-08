@@ -208,7 +208,7 @@ public class Login extends AppCompatActivity {
         alertDialog.show();
 
     }
-    public Runnable runnable =new Runnable() {
+    public Runnable runnable = new Runnable() {
         @Override
         public void run() {
             session.open(AuthType.KAKAO_LOGIN_ALL,Login.this);

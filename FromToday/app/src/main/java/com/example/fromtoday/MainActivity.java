@@ -2,7 +2,9 @@ package com.example.fromtoday;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -11,6 +13,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -44,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
     private Frag_People fragPeople;
 
     private ImageView info;
+    private ImageView menu;
+    private Stt stt;
     public SharedPreferences user_Value;
 
     private BackPressedForFinish backPressedForFinish;
@@ -51,12 +56,80 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference mPostReference;
     FirebasePost post;
 
+    public SharedPreferences text_result;
+
+    String food = "식단";
+    String home = "홈";
+    String main = "메인";
+    String sleep = "수면";
+    String activity = "운동";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         info = findViewById(R.id.info);
+        menu = findViewById(R.id.menu);
         currentUser();
+
+
+        // db에 저장할 시간과 분
+        int getHourTimePicker = 0;
+        int getMinuteTimePicker = 0;
+
+        // 알람매니저 설정
+        alarmMgr = (AlarmManager) getSystemService(ALARM_SERVICE);
+        // Calendar 객체 생성
+        calendar = Calendar.getInstance();
+        // 알람리시버 intent 생성
+        alarmIntent = new Intent(MainActivity.this, AlarmSetData.class);
+        //alarmIntent.putExtra("step",stepCount);
+        // DB 선언
+        SharedPreferences pref = getSharedPreferences("pref", Activity.MODE_PRIVATE);
+
+        // 23 이하, Old
+        if (Build.VERSION.SDK_INT < 23) {
+            calendar.set(Calendar.HOUR_OF_DAY, ALARM_HOUR);
+            calendar.set(Calendar.MINUTE, ALARM_MIN);
+            calendar.set(Calendar.SECOND, ALARM_SECOND);
+        }
+        // 23 이상, New
+        else {
+            // calendar 에 시간 셋팅
+            calendar.set(Calendar.HOUR_OF_DAY, ALARM_HOUR);
+            calendar.set(Calendar.MINUTE, ALARM_MIN);
+            calendar.set(Calendar.SECOND, ALARM_SECOND);
+        }
+
+        SharedPreferences.Editor editor = pref.edit();
+        // DB에 추가
+        editor.putInt("set_hour", getHourTimePicker);
+        editor.putInt("set_min", getMinuteTimePicker);
+
+        editor.commit();
+
+        calculateTime = calendar.getTimeInMillis();
+
+        pendingIntent = PendingIntent.getBroadcast(this, REQUEST_CODE, alarmIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // 안드로이드 버젼에 따라 alarmMgr 설정
+        // 23 미만
+        if (Build.VERSION.SDK_INT < 23) {
+            // 19 이상
+            if (Build.VERSION.SDK_INT >= 19) {
+                alarmMgr.setExact(AlarmManager.RTC_WAKEUP, calculateTime, pendingIntent);
+            }
+            // 19 미만
+            else {
+                // 알람셋팅
+                alarmMgr.set(AlarmManager.RTC_WAKEUP, calculateTime, pendingIntent);
+            }
+            // 23 이상
+        } else {
+            alarmMgr.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calculateTime, pendingIntent);
+        }
 
         // TODO : 바텀 네비게이션, Fragment 연결
         bottomNavigationView = findViewById(R.id.bottom_Navigation);
@@ -105,7 +178,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // BackPressedForFinish 객체를 생성.
+        menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogue();
+
+            }
+        });
+
+        // BackPressedForFinish 객체를 생성한다.
         backPressedForFinish = new BackPressedForFinish(this);
 
     }
@@ -205,18 +286,102 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void getText(){
+
+//            text_result = getSharedPreferences("result",MODE_PRIVATE);
+//            SharedPreferences.Editor editor = text_result.edit();
+//            String strResult = text_result.getString("result",null);
+//            System.out.println("maintext : " + strResult);
+//
+//        if(strResult.equals(move)) {
+//            setFrag(0);
+//            if(strResult!= null) {
+//                editor.remove("result");
+//            }
+//        }
+//        else {
+//            finish();
+//        }
+        String text_result;
+        Intent intent = getIntent();
+        text_result = intent.getStringExtra("result");
+        Log.e("qqqqqqqqqqqqqqqqqq","qqqqqqqqqqqqqqqqq"+text_result);
+
+
+        if(text_result != null) {
+            if(text_result.contains(food) == true) {
+                setFrag(0);
+                bottomNavigationView.setSelectedItemId(R.id.food);
+            }
+            if(text_result.contains(sleep) == true) {
+                setFrag(1);
+                bottomNavigationView.setSelectedItemId(R.id.sleep);
+            }
+            if(text_result.contains(home)||text_result.contains(main) == true){
+                setFrag(2);
+                bottomNavigationView.setSelectedItemId(R.id.home);
+            }
+            if(text_result.contains(activity) == true) {
+                setFrag(0);
+                bottomNavigationView.setSelectedItemId(R.id.activity);
+            }
+
+        }
+
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
         Intent intent = getIntent();
         int receiveCount = intent.getIntExtra("receiveCount",0);
         System.out.println("receiveCount value:"+receiveCount);
+        getText();
     }
 
     @Override
     public void onBackPressed() {
         // BackPressedForFinish 클래시의 onBackPressed() 함수를 호출한다.
         backPressedForFinish.onBackPressed();
+    }
+
+
+    private void dialogue(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+
+        builder.setTitle("음성인식").setMessage("실행하시겠습니까?");
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(getApplicationContext(), Stt.class);
+                startActivity(intent);
+
+
+
+
+            }
+
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialog, int id)
+            {
+                Toast.makeText(getApplicationContext(), "Cancel Click", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+//        text_result = getSharedPreferences("result",MODE_PRIVATE);
+//
+//        String strResult = text_result.getString("result",null);
+//
+//        Log.d("Maintext",strResult);
+
     }
 
 

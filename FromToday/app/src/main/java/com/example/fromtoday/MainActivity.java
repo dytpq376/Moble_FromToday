@@ -154,30 +154,6 @@ public class MainActivity extends AppCompatActivity {
                 ft.commit(); // 저장
                 break;
             case 4 :
-                //Login Activity 에서 넘어온 값 받기.
-//                Intent intent =getIntent();
-//
-//                String strName=intent.getStringExtra("name");
-//                String strImage = intent.getStringExtra("profile");
-//                String strEmail=intent.getStringExtra("email");
-//                String strGender=intent.getStringExtra("gender");
-//                String strAge=intent.getStringExtra("age");
-//                String strBirth=intent.getStringExtra("birthday");
-//
-//                Bundle bundle = new Bundle(6);
-//                bundle.putString("profile",strImage);
-//                bundle.putString("name",strName);
-//                bundle.putString("birthday",strAge);
-//                bundle.putString("email",strEmail);
-//                bundle.putString("gender",strGender);
-//                bundle.putString("age",strAge);
-//                bundle.putString("birthday",strBirth);
-//
-//                Frag_People people = new Frag_People();
-//                people.setArguments(bundle);
-//                FragmentManager fm = getSupportFragmentManager();
-//                FragmentTransaction ft = fm.beginTransaction();
-//                ft.replace(R.id.main_frame,people).commit();
                 ft.replace(R.id.main_frame, fragPeople);
                 ft.commit();
                 break;
@@ -187,26 +163,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void currentUser() {
-//        Intent intent = getIntent();
-//
-//        String strName = intent.getStringExtra("name");
-//        String strProfile = intent.getStringExtra("profile");
-//        String strEmail = intent.getStringExtra("email");
-//        String strGender = intent.getStringExtra("gender");
-//        String strAge = intent.getStringExtra("age");
-//        String strBirth = intent.getStringExtra("birthday");
-//
-//        user_Value = getSharedPreferences("currentUser",MODE_PRIVATE);
-//        SharedPreferences.Editor editor = user_Value.edit();
-//
-//        editor.putString("name",strName);
-//        editor.putString("profile",strProfile);
-//        editor.putString("email",strEmail);
-//        editor.putString("gender",strGender);
-//        editor.putString("age",strAge);
-//        editor.putString("birthday",strBirth);
-//
-//        editor.commit();
+
         user_Value = getSharedPreferences("currentUser",MODE_PRIVATE);
         SharedPreferences.Editor editor = user_Value.edit();
         String strName = user_Value.getString("name",null);
@@ -229,20 +186,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void getText(){
 
-//            text_result = getSharedPreferences("result",MODE_PRIVATE);
-//            SharedPreferences.Editor editor = text_result.edit();
-//            String strResult = text_result.getString("result",null);
-//            System.out.println("maintext : " + strResult);
-//
-//        if(strResult.equals(move)) {
-//            setFrag(0);
-//            if(strResult!= null) {
-//                editor.remove("result");
-//            }
-//        }
-//        else {
-//            finish();
-//        }
         String text_result;
         Intent intent = getIntent();
         text_result = intent.getStringExtra("result");

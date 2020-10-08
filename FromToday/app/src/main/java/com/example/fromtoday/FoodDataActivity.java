@@ -19,15 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FoodDataActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener {
-    //    public static String getEmail() {
-//        return email;
-//    }
-//
-//    public static void setEmail(String email) {
-//        FoodDataActivity.email = email;
-//    }
-//
-//    public static String email;
     private String email;
     //리스트뷰
     private ListView DBListView;
@@ -155,20 +146,6 @@ public class FoodDataActivity extends AppCompatActivity implements View.OnClickL
         return false;
     }
 
-//    //DB초기화
-//    private void initLoadDB() {
-//
-//        DataAdapter mDbHelper = new DataAdapter(getApplicationContext());
-//        mDbHelper.createDatabase();
-//        mDbHelper.open();
-//
-//        // db에 있는 값들을 model을 적용해서 넣는다.
-//        rtList = mDbHelper.getTableData();
-//
-//        // db 닫기
-//        mDbHelper.close();
-//    }
-
     private void setUserListViewAdapter(){
 
         pref = getSharedPreferences(""+email, MODE_PRIVATE);
@@ -287,8 +264,6 @@ public class FoodDataActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onBackPressed() {
-        //super.onBackPressed();
-        //Frag_Food food = new Frag_Food();
         Frag_Food.setMenu_Food(null);
         Frag_Food.setUserFood(null);
         finish();

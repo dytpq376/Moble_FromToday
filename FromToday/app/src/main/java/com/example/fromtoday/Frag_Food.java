@@ -82,36 +82,6 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
     private static final int MALE = 3200;
     private static final int FEMALE = 2600;
 
-
-    //칼로리 계산
-//    public int calrorieSum() {
-//        int total = 0;
-//        int keySetting = 0;
-//        //receive hashmap 의 키값
-//        Set set = Map_Breakfast.keySet();
-//        Iterator iterator = set.iterator();
-//        //receive에서 받아온 키 값을 저장해줄 key String 배열
-//        String[] key = new String[2];
-//        //hashmap 안에 null 값일 때 까지 iterator 인테페이스로 순차적 탐색
-//        while (iterator.hasNext()) {
-//            //key String 배열 초기화
-//            key[keySetting] = (String) iterator.next();
-//            keySetting++;
-//        }
-//        for (int i = 0; i < DB_Size; i++) {
-//            String id = rtList.get(i).getId();
-//            System.out.println(Map_Breakfast.keySet());
-//            for (int j = 0; j < Map_Breakfast.size(); j++) {
-//                if (id.equals(key[j])) {
-//                    //칼로리 계산
-//                    total += Integer.parseInt(rtList.get(i).getCalorie());
-//                }
-//            }
-//        }
-//        return total;
-//    }
-
-
     private View view;
     private ProgressBar progress;
     //식단 내용, 식단 값
@@ -144,9 +114,6 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
     int lunchKcal;
     int dinnerKcal;
     int totalSum = 0;
-    String alarmMessage;
-
-
 
     String email;
     String  gender;
@@ -161,18 +128,12 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.frag_food, container, false);
-        //initLoadDB();
-
-        //foodService = FoodService.getInstance();
-
         morning = view.findViewById(R.id.morning);
         morningfood = view.findViewById(R.id.morningfood);
         morningcalrorie = view.findViewById(R.id.morningcalrorie);
-
         afternoon = view.findViewById(R.id.afternoon);
         afternoonfood = view.findViewById(R.id.afternoonfood);
         afternoonclarorie = view.findViewById(R.id.afternooncalrorie);
-
         dinner = view.findViewById(R.id.dinner);
         dinnerfood = view.findViewById(R.id.dinnerfood);
         dinnercalrorie = view.findViewById(R.id.dinnercalrorie);
@@ -231,12 +192,6 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
             foodService = mb.getService();
             foodService.setCallback(foodCallback);
 
-//            dayKcal = getActivity().getSharedPreferences("dayKcal",getActivity().MODE_PRIVATE);
-//            SharedPreferences.Editor editor = dayKcal.edit();
-//            editor.remove("mondayKcal");
-//            editor.apply();
-
-            //setBarChart();
         }
         // 사실상 서비스가 킬되거나 아예 죽임 당했을 때만 호출된다고 보면 됨
         @Override
@@ -263,6 +218,8 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
 
                     case R.id.foodclear:
                         clearFood();
+                        FragmentTransaction ft = getFragmentManager().beginTransaction();
+                        ft.detach(Frag_Food.this).attach(Frag_Food.this).commit();
                         return;
 
                     default:
@@ -284,49 +241,9 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
         System.out.println("gender value:"+email);
 
         searchFood();
-
-//        alarmMessage = getArguments().getString("alarmMessage");
-//        if(alarmMessage.equals("alarmMessage")) {
-//            Log.i("sung","bundlevalue:"+alarmMessage);
-//        }
         doDayOfTheWeek();
         setBarChart();
-        //SharedPreferences.Editor editor = pref.edit();
 
-//        if (getMenu_Food() == null || Menu_Food.size() == 0) {
-//            System.out.println(getMenu_Food());
-//        }
-//        if(breakfast==null||pre.getString("breakfast",null)==null){
-//           System.out.println("null");
-//        }
-//        else{
-//            System.out.println("아침식사:"+breakfast);
-//            morning.setText("다시짜기");
-//            morningfood.setText("");
-//            morningfood.append(pre.getString("breakfast",null)+pre.getString("user_Breakfast",null));
-//            morningcalrorie.setText("아침식단 칼로리:"+pre.getString("brakfastCalrorie",null)+"kcal");
-//
-//    }
-//        if(lunch_Menu==null||pre.getString("lunch_Menu",null)==null){
-//            System.out.println("null");
-//        }
-//        else{
-//            afternoon.setText("다시짜기");
-//            afternoonfood.setText("");
-//            afternoonfood.append(pre.getString("lunch_Menu",null)+pre.getString("user_Lunch",null));
-//            afternoonclarorie.setText("점심식단 칼로리:"+pre.getString("lunch_MenuCalrorie",null)+"kcal");
-//
-//        }
-//        if(dinner_Menu==null||pre.getString("dinner_Menu",null)==null){
-//            System.out.println("null");
-//        }
-//        else{
-//            dinner.setText("다시짜기");
-//            dinnerfood.setText("");
-//            dinnerfood.append(pre.getString("dinner_Menu",null)+pre.getString("user_Dinner",null));
-//            dinnercalrorie.setText("저녁식단 칼로리:"+pre.getString("dinner_MenuCalrorie",null)+"kcal");
-//
-//        }
 
     }
 
@@ -474,33 +391,6 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
     }
 
     private void setBarChart() {
-/*        // 파이 차트 데이터 초기화
-        chartWalk.clearChart();
-        // 파이 차트에 데이터 추가
-        chartWalk.addPieSlice(new PieModel(WalkCount + " / 6000 걸음", 100, Color.parseColor(Colors.GRAY)));
-        chartWalk.addPieSlice(new PieModel("내 활동", 6, Color.parseColor(Colors.GRAY)));
-        // 파이차트 애니메이션 시작
-        chartWalk.startAnimation();*/
-        // BarChar 초기화
-//        if(dayKcal != null ) {
-//            dayKcal = getActivity().getSharedPreferences("dayKcal",getActivity().MODE_PRIVATE);
-//            int mondayKcal = dayKcal.getInt("mondayKcal",0);
-//            Log.d("setBarChart value:",""+mondayKcal);
-//            mBarChart.clearChart();
-//            // BarChar 데이터 입력
-//            mBarChart.addBar(new BarModel("일", mondayKcal, 0xFFCff0DA));
-//            mBarChart.addBar(new BarModel("월", mondayKcal, 0xFF88DBA3));
-//            mBarChart.addBar(new BarModel("화", mondayKcal, 0xFF90C695));
-//            mBarChart.addBar(new BarModel("수", mondayKcal, 0xFF3B8686));
-//            mBarChart.addBar(new BarModel("목", mondayKcal, 0xFF3AC569));
-//            mBarChart.addBar(new BarModel("금", mondayKcal, 0xFF3B8686));
-//            mBarChart.addBar(new BarModel("토", mondayKcal, 0xFFCFF09E));
-//            // BarChar 애니메이션 효과로 시작
-//            mBarChart.startAnimation();
-//        }
-//        if(call == true) {
-//            totalSum = 0;
-//        }
         dayKcal = getActivity().getSharedPreferences("dayKcal",getActivity().MODE_PRIVATE);
 
         if(mBarChart != null) {

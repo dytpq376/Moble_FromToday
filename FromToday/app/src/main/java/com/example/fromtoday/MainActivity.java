@@ -34,9 +34,9 @@ public class MainActivity extends AppCompatActivity {
     //화면 상수 값 지정
     private static final int FRAGMENT_FOOD = 0;
     private static final int FRAGMENT_SLEEP = 1;
-    private static final int FRAGMENT_HOME=2;
-    private static final int FRAGMENT_ACTIVITY=3;
-    private static final int FRAGMENT_PEOPLE=4;
+    private static final int FRAGMENT_HOME = 2;
+    private static final int FRAGMENT_ACTIVITY = 3;
+    private static final int FRAGMENT_PEOPLE = 4;
 
     // 네비게이션 사용을 위한 선언
     private BottomNavigationView bottomNavigationView; // 바텀 네비게이션 뷰
@@ -54,18 +54,6 @@ public class MainActivity extends AppCompatActivity {
     private ImageView menu;
     private Stt stt;
     public SharedPreferences user_Value;
-
-    // AlarmManager
-    private static final int REQUEST_CODE = 3333;
-    private static final int ALARM_HOUR = 10;
-    private static final int ALARM_MIN = 12;
-    private static final int ALARM_SECOND = 30;
-
-    AlarmManager alarmMgr;
-    PendingIntent pendingIntent;
-    private Calendar calendar;
-    private Intent alarmIntent;
-    public long calculateTime = 0;
 
     private BackPressedForFinish backPressedForFinish;
 
@@ -89,64 +77,6 @@ public class MainActivity extends AppCompatActivity {
         info = findViewById(R.id.info);
         menu = findViewById(R.id.menu);
         currentUser();
-
-
-        // db에 저장할 시간과 분
-        int getHourTimePicker = 0;
-        int getMinuteTimePicker = 0;
-
-        // 알람매니저 설정
-        alarmMgr = (AlarmManager) getSystemService(ALARM_SERVICE);
-        // Calendar 객체 생성
-        calendar = Calendar.getInstance();
-        // 알람리시버 intent 생성
-        alarmIntent = new Intent(MainActivity.this, AlarmSetData.class);
-        //alarmIntent.putExtra("step",stepCount);
-        // DB 선언
-        SharedPreferences pref = getSharedPreferences("pref", Activity.MODE_PRIVATE);
-
-        // 23 이하, Old
-        if (Build.VERSION.SDK_INT < 23) {
-            calendar.set(Calendar.HOUR_OF_DAY, ALARM_HOUR);
-            calendar.set(Calendar.MINUTE, ALARM_MIN);
-            calendar.set(Calendar.SECOND, ALARM_SECOND);
-        }
-        // 23 이상, New
-        else {
-            // calendar 에 시간 셋팅
-            calendar.set(Calendar.HOUR_OF_DAY, ALARM_HOUR);
-            calendar.set(Calendar.MINUTE, ALARM_MIN);
-            calendar.set(Calendar.SECOND, ALARM_SECOND);
-        }
-
-        SharedPreferences.Editor editor = pref.edit();
-        // DB에 추가
-        editor.putInt("set_hour", getHourTimePicker);
-        editor.putInt("set_min", getMinuteTimePicker);
-
-        editor.commit();
-
-        calculateTime = calendar.getTimeInMillis();
-
-        pendingIntent = PendingIntent.getBroadcast(this, REQUEST_CODE, alarmIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-
-        // 안드로이드 버젼에 따라 alarmMgr 설정
-        // 23 미만
-        if (Build.VERSION.SDK_INT < 23) {
-            // 19 이상
-            if (Build.VERSION.SDK_INT >= 19) {
-                alarmMgr.setExact(AlarmManager.RTC_WAKEUP, calculateTime, pendingIntent);
-            }
-            // 19 미만
-            else {
-                // 알람셋팅
-                alarmMgr.set(AlarmManager.RTC_WAKEUP, calculateTime, pendingIntent);
-            }
-            // 23 이상
-        } else {
-            alarmMgr.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calculateTime, pendingIntent);
-        }
 
         // TODO : 바텀 네비게이션, Fragment 연결
         bottomNavigationView = findViewById(R.id.bottom_Navigation);
@@ -199,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dialogue();
-
             }
         });
 
@@ -400,7 +329,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(getApplicationContext(), Stt.class);
                 startActivity(intent);
-
 
 
 

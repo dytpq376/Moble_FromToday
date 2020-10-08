@@ -1,13 +1,16 @@
 package com.example.fromtoday;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -20,6 +23,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,8 +38,7 @@ import java.util.Calendar;
  * (따라서 여러 프로세스에서 같은 서비스에 바인딩하여 작업을 수행가능)
  */
 public class StepService extends Service implements SensorEventListener {
-    SharedPreferences step_Value;
-    // 상수
+    // 상수 Constant
     public static final double KCAL_PER_MINUTE = 4.5;
     public static final double KM_PER_MIN = 0.05;
     public static final double TIME_STOP_WAITING_STEP = 1.5;  // 걸음 간격 사이가 몇초 이상이면 정지
@@ -45,33 +48,52 @@ public class StepService extends Service implements SensorEventListener {
     public double interval_Step = 0;
     public double totalSeconds;
     public long prevTime = 0;
+    public int mStepDetector = 0;
     public int minute, second;
     public int kcal = 0;
     public double kilometer = 0.0;
+    // 요일 변수
+    public int sundayKcal, mondayKcal, tuesdayKcal, wednesdayKcal;
+    public int thursdayKcal, fridayKcal, saturdayKcal;
 
-    // Interface
-    static StepCallback callback;
-    public int mStepDetector = 0;
-
+    // SensorManager(StepDetector)
     private SensorManager sensorManager;
     private Sensor stepDetectorSensor;
     private Sensor stepCountSensor;
-
+    // BindService CallBack
+    static StepCallback callback;
     private MyBinder mMyBinder = new MyBinder();
+    // 저장용도
+    private SharedPreferences weekKcal, stepData;
 
-    private AlarmSetData alarmSetData;
+    // AlarmManager Calendar 상수
+    private static final int REQUEST_CODE = 3333;
+    private static final int ALARM_HOUR = 11;
+    private static final int ALARM_MIN = 42;
+    private static final int ALARM_SECOND = 0;
+
+    AlarmManager alarmMgr;
+    PendingIntent pendingIntent;
+    private Calendar calendar;
+    private Intent alarmIntent;
+    public long calculateTime = 0;
 
     // 싱글톤 패턴
     private static StepService singleStepService;
-/*    private StepService( ) {}*/
+    /*    private StepService( ) {}*/
 
     public static StepService getInstance() {
+
         if (singleStepService == null) {
             singleStepService = new StepService();
+        } else if (singleStepService != null) {
+
+            singleStepService = null;
+            singleStepService = new StepService();
+
         }
         return singleStepService;
     }
-
 
     /*
      * 바인드 클래스 생성
@@ -85,7 +107,7 @@ public class StepService extends Service implements SensorEventListener {
     }
 
     public void setCallback(StepCallback callback) {
-        Log.i("jenn", "setCallback : callback " + callback );
+        Log.i("jenn", "setCallback : callback " + callback);
         this.callback = callback;
     }
 
@@ -99,16 +121,36 @@ public class StepService extends Service implements SensorEventListener {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        Log.i("jenn", "StepService : onBind");
+        Log.i("geon", "StepService : onBind");
         return mMyBinder;
     }
 
-    // TODO :  생명주기 = onCreate() -> onStartCommand (서비스 처음 실행 시)
+    /*
+     * 서비스에 바인드된 컴포넌트가 더이상 없을 경우 서비스는 소멸
+     * onUnbind()메서드를 이용하여 서비스와 컴포넌트의 바인딩을 해제제
+     */
+    @Override
+    public boolean onUnbind(Intent intent) {
+        unRegistManager();
+        if (callback != null)
+            callback.onUnbindService();
+        return super.onUnbind(intent);
+    }
+
+    //혹시 모를 에러상황에 트라이 캐치
+    public void unRegistManager() {
+        try {
+            sensorManager.unregisterListener(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
 
-        Log.i("jenn", "StepService : onCreate");
+        Log.i("geon", "StepService : onCreate");
 
         // sensorManager
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -127,16 +169,17 @@ public class StepService extends Service implements SensorEventListener {
                     stepDetectorSensor, SensorManager.SENSOR_DELAY_NORMAL);
         }
 
-        alarmSetData = new AlarmSetData();
-        Init_Data();
+//        alarmSetData = new AlarmSetData();
+//        Init_Data();
+        setAlarmIntent();
+
     }
 
-    // TODO : onStartCommand => 시작된서비스(콜백 메서드)
-    // TODO : 서비스가 실행되고 있는 상태에서 또 서비스 시작을 할 경우 onStartCommand()함수를 탑
+    // onStartCommand => 시작된서비스(콜백 메서드)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        Log.i("jenn", "StepService : onStartCommand");
+        Log.i("geon", "StepService : onStartCommand");
 
         // Notification (알림창)
         initializeNotification();
@@ -144,6 +187,9 @@ public class StepService extends Service implements SensorEventListener {
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         stepDetectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
         if (stepDetectorSensor == null) {
+            /*
+            Toast.makeText(this, "No Step Detect Sensor", Toast.LENGTH_SHORT).show();
+            */
         } else {
             sensorManager.registerListener(this,
                     stepCountSensor, SensorManager.SENSOR_DELAY_NORMAL);
@@ -156,13 +202,148 @@ public class StepService extends Service implements SensorEventListener {
                     stepDetectorSensor, SensorManager.SENSOR_DELAY_NORMAL);
 
         }
+
+        // AlarmSetData 클래스에서 데이터가 넘어오는지
+        String param = intent.getStringExtra("SEND_INIT");
+        Log.i("geon", "SEND_INIT : " + param);
+        if (param != null) {
+            Hdl_StepDetect.sendEmptyMessage(SEND_INIT);
+            Log.i("geon", "SEND_INIT : " + param);
+        }
+
         // START_STICKY => 서비스 시작후 강제로 종료될 경우, 자동으로 서비스를 실행
         return START_STICKY;
     }
 
-    // TODO : NotificationCompat.Builder 개체를 사용하여 콘텐츠와 채널을 설정
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        // Calendar 객체를 사용하여 AlarmManager 사용
+        final Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.add(Calendar.SECOND, 3);
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        PendingIntent sender = PendingIntent.getBroadcast(this,
+                0, intent, 0);
+
+        // AlarmManager 를 통해 정해진 초 동안 핸드폰을 지속적으로 깨워서 강제 종료를 막음.
+        AlarmManager alarmManager =
+                (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), sender);
+    }
+
+//    private void Init_Data() {
+//        alarmSetData.Init_Data(Hdl_StepDetect);
+//    }
+
+    // TODO : 걸음 센서에 따른 Handler
+    Handler Hdl_StepDetect = new Handler(Looper.myLooper()) {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            switch (msg.what) {
+                // 발걸음 센서 발생 ----------------------------------------------------------------
+                case STEP_DETECT:
+                    // SharedPreference 에 저장하기 위한 선언
+                    stepData = getSharedPreferences("stepData", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = stepData.edit();
+
+                    // 현재 시간 받아오기
+                    long currTime = System.currentTimeMillis();
+                    if (prevTime == 0) {
+                        // 첫 발걸음이라면 현재시간 저장
+                        prevTime = currTime;
+                    } else {
+                        // 현 발걸음 - 전 발걸음
+                        interval_Step = ((currTime - prevTime) / 1000.0);
+                    }
+                    // 현재 발걸음시간을 전 발걸음시간에 저장
+                    prevTime = currTime;
+
+                    // (스텝 간격 < 멈춰있다는 기준시간) 경우에만 시간, 스텝 수 측정
+                    if (interval_Step < TIME_STOP_WAITING_STEP) {
+                        // ============================== 걸음수 증가 ==============================
+                        mStepDetector++;
+                        // ==================== 활동 시간, 이동거리, 칼로리 측정 ====================
+                        totalSeconds += interval_Step;
+                        minute = (int) (totalSeconds / 60.0);
+                        second = (int) (totalSeconds);
+                        second = second % 60;
+                        Log.e("스텝 디텍터", "" + mStepDetector);
+
+                        kilometer = (minute * KM_PER_MIN);
+                        kcal = (int) (minute * KCAL_PER_MINUTE);
+
+                        // SharedPreference 에 저장
+                        editor.putInt("mStepDetector", mStepDetector);
+                        editor.putInt("kcal", kcal);
+                        editor.putString("kilometer", String.valueOf(kilometer));
+                        editor.putInt("minute", minute);
+                        editor.putInt("second", second);
+                        editor.commit();
+                        // ======================= 콜백으로 Frag_Home 에 전달 =======================
+                        if (callback != null)
+                            callback.onStepCallback(mStepDetector, kcal, kilometer, minute, second);
+                    }
+                    break;
+                // 데이터 초기화(23시 59분) ---------------------------------------------------------
+                case SEND_INIT:
+
+                    Log.i("geon", "Hdl_StepDetect : SEND_INIT,  call back:" + callback);
+                    // 요일별로 걸음수 데이터 저장
+                    doDayOfTheWeek(mStepDetector);
+                    // =================== SharedPreferences에서 요일별로 가져오기 ==================
+                    weekKcal = getSharedPreferences("weekKcal", MODE_PRIVATE);
+                    sundayKcal = weekKcal.getInt("sundayKcal", 0);
+                    mondayKcal = weekKcal.getInt("mondayKcal", 0);
+                    tuesdayKcal = weekKcal.getInt("tuesdayKcal", 0);
+                    wednesdayKcal = weekKcal.getInt("wednesdayKcal", 0);
+                    thursdayKcal = weekKcal.getInt("thursdayKcal", 0);
+                    fridayKcal = weekKcal.getInt("fridayKcal", 0);
+                    saturdayKcal = weekKcal.getInt("saturdayKcal", 0);
+
+                    // ========================= 콜백으로 Frag_Home 에 전달 =========================
+                    if (callback != null) {
+                        Log.i("geon", "callback != null 들어옴 ");
+                        Log.e("geon", "mStepDetector : " + mStepDetector);
+                        callback.onInitCallback(sundayKcal, mondayKcal, tuesdayKcal, wednesdayKcal,
+                                thursdayKcal, fridayKcal, saturdayKcal);
+                    }
+                    // ================================ 데이터 초기화 ===============================
+                    mStepDetector = 0;
+                    kcal = 0;
+                    kilometer = 0;
+                    minute = 0;
+                    second = 0;
+
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    };
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_STEP_DETECTOR) {
+            if (event.values[0] == 1.0f) {
+                // ========================== Handler Message 전달 ==========================
+                Hdl_StepDetect.sendEmptyMessage(STEP_DETECT);
+            }
+        } else if (event.sensor.getType() == Sensor.TYPE_STEP_COUNTER) {
+            // ========================== TYPE_STEP_COUNTER 확인용 ==========================
+            Log.e("스텝 카운트", "" + event.values[0]);
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+
     public void initializeNotification() {
-        // 알림창 생성, 채널 지정
+        /*
+         * 알림창 생성, 채널 지정
+         * NotificationCompat.Builder 개체를 사용하여 콘텐츠와 채널을 설정
+         */
         NotificationCompat.Builder builder = new
                 NotificationCompat.Builder(this, "1");
 
@@ -205,144 +386,146 @@ public class StepService extends Service implements SensorEventListener {
         startForeground(1, notification);
     }
 
-    // TODO : 서비스를 종료 시켰을 경우
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        // Calendar 객체를 사용하여 AlarmManager 사용
-        final Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.add(Calendar.SECOND, 3);
-        Intent intent = new Intent(this, AlarmReceiver.class);
-        PendingIntent sender = PendingIntent.getBroadcast(this,
-                0, intent, 0);
+    private void setAlarmIntent() {
+        // db에 저장할 시간과 분
+        int getHourTimePicker = 0;
+        int getMinuteTimePicker = 0;
 
-        // AlarmManager 를 통해 정해진 초 동안 핸드폰을 지속적으로 깨워서 강제 종료를 막음.
-        AlarmManager alarmManager =
-                (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), sender);
-    }
+        // 알람매니저 설정
+        alarmMgr = (AlarmManager) getSystemService(ALARM_SERVICE);
+        // Calendar 객체 생성
+        calendar = Calendar.getInstance();
+        // 알람리시버 intent 생성
+        alarmIntent = new Intent(StepService.this, AlarmSetData.class);
+        //alarmIntent.putExtra("step",stepCount);
+        // DB 선언
+        SharedPreferences pref = getSharedPreferences("pref", Activity.MODE_PRIVATE);
 
-    /*
-     * 서비스에 바인드된 컴포넌트가 더이상 없을 경우 서비스는 소멸
-     * onUnbind()메서드를 이용하여 서비스와 컴포넌트의 바인딩을 해제제
-     */
-/*
-    // 바인드 서비스를 종료 시켰을 경우
-    @Override
-    public boolean onUnbind(Intent intent) {
-        unRegistManager();
-        if (callback != null)
-            callback.onUnbindService();
-        return super.onUnbind(intent);
-    }
-
-    // 혹시 모를 에러상황에 트라이 캐치
-    public void unRegistManager() {
-        try {
-            sensorManager.unregisterListener(this);
-        } catch (Exception e) {
-            e.printStackTrace();
+        // 23 이하, Old
+        if (Build.VERSION.SDK_INT < 23) {
+            calendar.set(Calendar.HOUR_OF_DAY, ALARM_HOUR);
+            calendar.set(Calendar.MINUTE, ALARM_MIN);
+            calendar.set(Calendar.SECOND, ALARM_SECOND);
         }
-    }
+        // 23 이상, New
+        else {
+            // calendar 에 시간 셋팅
+            calendar.set(Calendar.HOUR_OF_DAY, ALARM_HOUR);
+            calendar.set(Calendar.MINUTE, ALARM_MIN);
+            calendar.set(Calendar.SECOND, ALARM_SECOND);
+        }
 
-*/
+        SharedPreferences.Editor editor = pref.edit();
 
-    //---------------------------------------------------------------------------------------------
-    // TODO : Handler (걸음수 생성 및 초기화)
-    //---------------------------------------------------------------------------------------------
-    // 다른 클래스의 핸들러 메세지를 받아 핸들러에 전달.
-    private void Init_Data() {
-        alarmSetData.Init_Data(Hdl_StepDetect);
-    }
+        // SharedPreferences 에서 값 가져오기
+        stepData = getSharedPreferences("stepData", MODE_PRIVATE);
 
-    // 전역 변수(Test)
-    int Monday_step;
+        mStepDetector = stepData.getInt("mStepDetector",0);
+        kcal = stepData.getInt("kcal",0);
+        kilometer = Double.parseDouble(stepData.getString("kilometer","0"));
+        minute = stepData.getInt("minute",0);
+        second = stepData.getInt("second",0);
 
-    // Handler 선언 후 사용
-    Handler Hdl_StepDetect = new Handler(Looper.myLooper()) {
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            Frag_Home home = new Frag_Home();
-            switch (msg.what) {
-                // 발걸음 센서 발생 ----------------------------------------------------------------
-                case STEP_DETECT:
-                    // 현재 시간 받아오기
-                    long currTime = System.currentTimeMillis();
-                    if (prevTime == 0) {
-                        // 첫 발걸음이라면 현재시간 저장
-                        prevTime = currTime;
-                    } else {
-                        // 현 발걸음 - 전 발걸음
-                        interval_Step = ((currTime - prevTime) / 1000.0);
-                    }
-                    // 현재 발걸음시간을 전 발걸음시간에 저장
-                    prevTime = currTime;
+        // DB에 추가
+        editor.putInt("set_hour", getHourTimePicker);
+        editor.putInt("set_min", getMinuteTimePicker);
 
-                    // (스텝 간격 < 멈춰있다는 기준시간) 경우에만 시간, 스텝 수 측정
-                    if (interval_Step < TIME_STOP_WAITING_STEP) {
-                        // ============================== 걸음수 증가 ==============================
-                        singleStepService.mStepDetector++;
+        editor.commit();
 
-                        // ==================== 활동 시간, 이동거리, 칼로리 측정 ====================
+        calculateTime = calendar.getTimeInMillis();
 
-                        totalSeconds += interval_Step;
-                        minute = (int) (totalSeconds / 60.0);
-                        second = (int) (totalSeconds);
-                        second = second % 60;
-                        Log.e("스텝 디텍터", "" + singleStepService.mStepDetector);
+        pendingIntent = PendingIntent.getBroadcast(this, REQUEST_CODE, alarmIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
 
-                        kilometer = (minute * KM_PER_MIN);
-                        kcal = (int) (minute * KCAL_PER_MINUTE);
-
-                        // ======================= 콜백으로 Frag_Home 에 전달 =======================
-                        if (callback != null)
-                            callback.onStepCallback(singleStepService.mStepDetector, kcal, kilometer, minute, second);
-                    }
-                    break;
-
-                case SEND_INIT :
-
-                    Monday_step = singleStepService.mStepDetector;
-
-                    singleStepService.mStepDetector = 0;
-                    kcal = 0;
-                    kilometer = 0;
-                    minute = 0;
-                    second = 0;
-
-                    Log.i("jenn", "Hdl_StepDetect : SEND_INIT,  call back:" + callback);
-                    Log.e("Monday_step : ", "" + Monday_step);
-                    Log.e("mStepDetector : ", "" + singleStepService.mStepDetector);
-
-                    // ======================= 콜백으로 Frag_Home 에 전달 =======================
-                    if (callback != null) {
-                    Log.i("jenn", "callback != null 들어옴 ");
-                    callback.onStepCallback(singleStepService.mStepDetector, kcal, kilometer, minute, second);
-                }
-                    break;
-
+        // 안드로이드 버젼에 따라 alarmMgr 설정
+        // 23 미만
+        if (Build.VERSION.SDK_INT < 23) {
+            // 19 이상
+            if (Build.VERSION.SDK_INT >= 19) {
+                alarmMgr.setExact(AlarmManager.RTC_WAKEUP, calculateTime, pendingIntent);
             }
-            super.handleMessage(msg);
-        }
-    };
-
-    // TODO : 센서 발생시 어떤 센서가 발생됬는지 판단(핸들러 메세지 전달)
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        if (event.sensor.getType() == Sensor.TYPE_STEP_DETECTOR) {
-            if (event.values[0] == 1.0f) {
-                // ========================== Handler Message 전달 ==========================
-                Hdl_StepDetect.sendEmptyMessage(STEP_DETECT);
+            // 19 미만
+            else {
+                // 알람셋팅
+                alarmMgr.set(AlarmManager.RTC_WAKEUP, calculateTime, pendingIntent);
             }
-        } else if (event.sensor.getType() == Sensor.TYPE_STEP_COUNTER) {
-            // ========================== TYPE_STEP_COUNTER 확인용 ==========================
-            Log.e("스텝 카운트", "" + event.values[0]);
+            // 23 이상
+        } else {
+            // setInexactRepeating(배터리 소모가 적으나 대략 그시간대에 울림)
+            // setRepeating (정확한 그 시간에 울림)
+            alarmMgr.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calculateTime, pendingIntent);
+            // AlarmManager.INTERVAL_DAY 하루마다 울리도록
+            alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calculateTime,
+                    AlarmManager.INTERVAL_DAY/* 1000 * 60 */, pendingIntent);
+
         }
     }
 
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    // 요일별 칼로리 데이터 저장
+    private void doDayOfTheWeek(int totalKcal) {
+        weekKcal = getSharedPreferences("weekKcal", MODE_PRIVATE);
+        stepData = getSharedPreferences("stepData", MODE_PRIVATE);
 
+        SharedPreferences.Editor weekEditor = weekKcal.edit();
+        SharedPreferences.Editor stepEditor = stepData.edit();
+
+        stepEditor.remove("mStepDetector");
+        stepEditor.remove("kcal");
+        stepEditor.remove("kilometer");
+        stepEditor.remove("minute");
+        stepEditor.remove("second");
+        stepEditor.commit();
+
+        //달력 날자 받아오기
+        Calendar calendar = Calendar.getInstance(); //캘린더 인스턴스 받아오기
+        //Calendar.DAY_OF_WEEK 로 요일별 분류
+        int calendar_week = calendar.get(Calendar.DAY_OF_WEEK);
+        switch (calendar_week) {
+            case 1: // Sunday
+                // 기존데이터 삭제 후 다시 저장 시작
+                weekEditor.remove("sundayKcal");
+                weekEditor.remove("mondayKcal");
+                weekEditor.remove("tuesdayKcal");
+                weekEditor.remove("wednesdayKcal");
+                weekEditor.remove("thursdayKcal");
+                weekEditor.remove("fridayKcal");
+                weekEditor.remove("saturdayKcal");
+
+                weekEditor.putInt("sundayKcal", totalKcal);
+                weekEditor.commit();
+                Log.i("geon", "sundayKcal : " + totalKcal);
+                break;
+            case 2: // Monday
+                weekEditor.putInt("mondayKcal", totalKcal);
+                weekEditor.commit();
+                Log.i("geon", "mondayKcal : " + totalKcal);
+                break;
+            case 3: // Tuesday
+                weekEditor.putInt("tuesdayKcal", totalKcal);
+                weekEditor.commit();
+                Log.i("geon", "tuesdayKcal : " + totalKcal);
+                break;
+            case 4: // Wednesday
+                weekEditor.putInt("wednesdayKcal", totalKcal);
+                weekEditor.commit();
+                Log.i("geon", "wednesdayKcal : " + totalKcal);
+                break;
+            case 5: // Thursday
+                weekEditor.putInt("thursdayKcal", totalKcal);
+                weekEditor.commit();
+                Log.i("geon", "thursdayKcal : " + totalKcal);
+                break;
+            case 6: // Friday
+                weekEditor.putInt("fridayKcal", totalKcal);
+                weekEditor.commit();
+                Log.i("geon", "fridayKcal : " + totalKcal);
+                break;
+            case 7: // Saturday
+                weekEditor.putInt("saturdayKcal", totalKcal);
+                weekEditor.commit();
+                Log.i("geon", "saturdayKcal : " + totalKcal);
+                break;
+        }
     }
+
 }

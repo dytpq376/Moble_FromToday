@@ -21,10 +21,14 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
+import java.util.Iterator;
 
 public class MainActivity extends AppCompatActivity {
     //화면 상수 값 지정
@@ -66,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
     private BackPressedForFinish backPressedForFinish;
 
     private DatabaseReference mPostReference;
+    private DatabaseReference databaseReference;
     FirebasePost post;
 
     public SharedPreferences text_result;
@@ -288,14 +293,41 @@ public class MainActivity extends AppCompatActivity {
         String strBirth = user_Value.getString("birthday",null);
 
         mPostReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference = FirebaseDatabase.getInstance().getReference("users");
 
         strEmail = strEmail.replaceAll("@", "").replaceAll("[.]", "");
-        if(strEmail != null) {
 
-            post = new FirebasePost(strProfile, strName, strEmail, strGender, strAge, strBirth);
-            mPostReference.child("users").child(strEmail).setValue(post);
+        String finalStrEmail = strEmail;
 
-        }
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                Iterator<DataSnapshot> child = dataSnapshot.getChildren().iterator();
+                //users의 모든 자식들의 key값과 value 값들을 iterator로 참조합니다.
+
+                while(child.hasNext())
+                {
+                    //찾고자 하는 ID값은 key로 존재하는 값
+                    if(child.next().getKey().equals(finalStrEmail))
+                    {
+                        return;
+                    }
+
+                }
+                if(finalStrEmail != null) {
+
+                    post = new FirebasePost(strProfile, strName, finalStrEmail, strGender, strAge, strBirth);
+                    mPostReference.child("users").child(finalStrEmail).setValue(post);
+
+
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void getText(){

@@ -41,6 +41,11 @@
         <activity android:name=".FoodDataActivity"></activity>
         <activity android:name=".GoogleMapActivity"></activity>
         <activity android:name=".Stt"></activity>
+
+        <!--    액티비티 이동 선언 입니다-->
+        <activity android:name=".Activity_Walk"></activity>
+        <activity android:name=".Activity_Run"></activity>
+        <activity android:name=".Activity_Bike"></activity>
         <!-- Alarm Activity -->
         <activity android:name=".AlarmActivity"/>
         <!-- Alarm Manager -->
@@ -52,6 +57,12 @@
         <!-- Foreground Service -->
         <service android:name=".StepService" />
         <service android:name=".FoodService"/>
+        <service
+            android:name=".LocationUpdatesService"
+            android:enabled="true"
+            android:exported="true"
+            android:foregroundServiceType="location" />
+
         <receiver android:name="AlarmReceiver"/>
 
     </application>

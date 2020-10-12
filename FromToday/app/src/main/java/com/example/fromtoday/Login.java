@@ -78,6 +78,7 @@ public class Login extends AppCompatActivity {
         btn_custom_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //kakao login 창 열기
                 session.open(AuthType.KAKAO_LOGIN_ALL, Login.this);
                 //로그인 status 확인
                 if(Session.getCurrentSession().isOpened()) {
@@ -143,15 +144,10 @@ public class Login extends AppCompatActivity {
                 public void onSessionClosed(ErrorResult errorResult) {
                     Toast.makeText(getApplicationContext(),"세션이 닫혔습니다. 다시 시도해 주세요: "+errorResult.getErrorMessage(),Toast.LENGTH_SHORT).show();
                 }
-
+                // 로그인 성공시
                 @Override
                 public void onSuccess(MeV2Response result) {
-//                    Frag_People people = new Frag_People();
-//                    Bundle bundle =new Bundle();
-//                    bundle.putString("profile",result.getProfileImagePath());
-//                    bundle.putString("name",result.getNickname());
-//                    people.setArguments(bundle);
-
+                    // 로그인 성공시 user_Value 저장소에 user 정보를 저장
                     user_Value = getSharedPreferences("currentUser",MODE_PRIVATE);
                     SharedPreferences.Editor editor = user_Value.edit();
                     editor.putString("name",result.getNickname());
@@ -194,6 +190,7 @@ public class Login extends AppCompatActivity {
             }
         }
     }
+
         private void dialogue(){
 
         AlertDialog.Builder dialogue = new AlertDialog.Builder(Login.this);

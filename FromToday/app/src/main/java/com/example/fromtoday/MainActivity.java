@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
+    //Login Activity 에서 로그인 한 Kako user 정보 저장 및 FireBase에 저장
     private void currentUser() {
 
         user_Value = getSharedPreferences("currentUser",MODE_PRIVATE);
@@ -292,12 +292,6 @@ public class MainActivity extends AppCompatActivity {
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
-
-//        text_result = getSharedPreferences("result",MODE_PRIVATE);
-//
-//        String strResult = text_result.getString("result",null);
-//
-//        Log.d("Maintext",strResult);
 
     }
 

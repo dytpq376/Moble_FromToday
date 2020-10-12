@@ -127,6 +127,7 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
     private BarChart mBarChart;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        //사용할 xml id 선언
         view = inflater.inflate(R.layout.frag_food, container, false);
         morning = view.findViewById(R.id.morning);
         morningfood = view.findViewById(R.id.morningfood);
@@ -142,9 +143,10 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
         progress = view.findViewById(R.id.progress);
         tvbartext = view.findViewById(R.id.tvbartext);
         mBarChart = (BarChart)view.findViewById(R.id.tab1_chart_2);
-
+        //Frag_Food에서 사용할 SharedPreferences 저장소
         currentUser = getActivity().getSharedPreferences("currentUser",getActivity().MODE_PRIVATE);
         dayKcal = getActivity().getSharedPreferences("dayKcal",getActivity().MODE_PRIVATE);
+
         //searchFood();
         if (getMenu_Food() == null || Menu_Food.size() == 0) {
             System.out.println(getMenu_Food());
@@ -165,11 +167,13 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
     }
     //서비스 내부로 Set 되어 스텝카운트의 변화와 Unbind 의 결과를 전달하는 콜백 객체의 구현체
     private FoodCallback foodCallback = new FoodCallback() {
-
+        //FoodService 에서 callback 을 받아 fragement 화면 초기화
         @Override
         public void onFoodCallback(int iNIT_DATA) {
             Log.d("sung",""+iNIT_DATA);
+            //call back boolean 값
             alarmCall = true;
+            //fragment 화면 초기화
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.detach(Frag_Food.this).attach(Frag_Food.this).commit();
         }
@@ -200,6 +204,7 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
             Toast.makeText(getActivity(), "디스바인딩", Toast.LENGTH_SHORT).show();
         }
     };
+    //Frag_Food onclick listener
     @Override
             public void onClick(View view) {
                 int requestCode = 0;
@@ -329,6 +334,7 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
 
 
     }
+    //식단 초기화
     private void clearFood() {
         SharedPreferences.Editor editor = pre.edit();
 
@@ -361,6 +367,7 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
         lunchKcal = 0;
         dinnerKcal = 0;
     }
+    //내장 db 식단 칼로리 계산
     public int FoodCalrorieSum() {
         int sum=0;
         for(int i = 0 ; i<Menu_Food.size();i++) {
@@ -369,6 +376,7 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
         sum += UserCalrorieSum();
         return sum;
     }
+    //사용자 추가 식단 칼로리 계산
     public int UserCalrorieSum() {
         int total = 0;
         for(int i = 0 ; i<UserCalrorie.size(); i++) {
@@ -376,6 +384,7 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
         }
         return total;
     }
+    // 칼로리 프로그레스바 초기화
     private void setProgressBar() {
 
         if(gender.equals("male")){
@@ -389,7 +398,7 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
             progress.setProgress(totalSum);
         }
     }
-
+    // 날짜별 막대 그래프
     private void setBarChart() {
         dayKcal = getActivity().getSharedPreferences("dayKcal",getActivity().MODE_PRIVATE);
 
@@ -429,6 +438,7 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
             case 1:
                 int sunday = dayKcal.getInt("dayKcal",0);
                 editor.putInt("sunday",sunday);
+                editor.commit();
                 Log.i("Geon", "sundayKcal : " );
                 if(alarmCall == true) {
                     editor = dayKcal.edit();

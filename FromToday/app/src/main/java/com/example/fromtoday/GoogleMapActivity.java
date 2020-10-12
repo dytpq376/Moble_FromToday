@@ -687,7 +687,7 @@ public class GoogleMapActivity extends AppCompatActivity
                 .execute();
 
     }
-
+    // 로그인 한 사용자 정보 초기화 및 업데이트
     private void prefCurrent() {
         currentUser = getSharedPreferences("currentUser", MODE_PRIVATE);
         String strProfile = currentUser.getString("profile", null);

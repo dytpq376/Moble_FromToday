@@ -3,4 +3,20 @@
     <string name="kakao_app_key">8667f8f834c8f1dd82a4bc2a7c03ead7</string>
     <string name="tap_on_mic">마이크를 눌러 말해주세요</string>
 
+    <string name="launch_activity">1앱 으로 가기</string>
+    <string name="location_unknown">Location unknown</string>
+    <string name="location_updates_label">Location Updates</string>
+
+    <string name="permission_rationale">Location permission is needed for core functionality</string>
+    <string name="permission_denied_explanation">Permission was denied, but is needed for core
+        functionality.</string>
+    <string name="settings">Settings</string>
+    <string name="ok">OK</string>
+    <string name="request_location_updates">Request location updates</string>
+    <string name="remove_location_updates">운동 종료</string>
+
+    <string name="location_updated">Location Updated: %1$s</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

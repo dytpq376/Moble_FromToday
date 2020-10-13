@@ -58,10 +58,10 @@ public class Frag_Activity_Vp_Bike extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.frag_activity_vp_walk, container, false);
+        view = inflater.inflate(R.layout.frag_activity_vp_bike, container, false);
 
         //리사이클뷰 설정
-        recyclerView = view.findViewById(R.id.recyclerview);// 아디 연결
+        recyclerView = view.findViewById(R.id.bike_recyclerview);// 아디 연결
         recyclerView.setHasFixedSize(true);//리사이클뷰 기존 성능 강화
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);

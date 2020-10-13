@@ -2,22 +2,20 @@ package com.example.fromtoday;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.RectF;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.MotionEvent;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ScrollView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
@@ -33,7 +31,6 @@ import org.eazegraph.lib.models.BarModel;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import static android.content.ContentValues.TAG;
 import static android.content.Context.MODE_PRIVATE;
 
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -70,8 +67,8 @@ public class Frag_Activity extends Fragment {
     private FragmentPagerAdapter fragmentPagerAdapter;
 
     //이중 스크롤뷰 선언
-    private ScrollView childscrollview;
-    private ScrollView parentscrollview;
+   // private ScrollView childscrollview;
+    private NestedScrollView parentscrollview;
 
     private ViewPager viewPager;
 
@@ -99,6 +96,15 @@ public class Frag_Activity extends Fragment {
     FirebaseDatabase mDatabase;
     DatabaseReference dataRef;
 
+    //리사이클 뷰
+    private NestedScrollView walk_scroll;
+    private NestedScrollView run_scroll;
+    private NestedScrollView bike_scroll;
+
+    private RecyclerView.Adapter adapter;
+    private RecyclerView.LayoutManager layoutManager;
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -114,12 +120,13 @@ public class Frag_Activity extends Fragment {
 
         viewPager = view.findViewById(R.id.view_pager);
 
-        //스크롤 뷰
-        //parentscrollview = view.findViewById(R.id.parentscrollview);
-        childscrollview = view.findViewById(R.id.childscrollview);
+/
 
-        //parentscrollview.setOnTouchListener(this);
-        //childscrollview.setOnTouchListener(this);
+
+        //스크롤 뷰
+        parentscrollview = view.findViewById(R.id.parentscrollview);
+        //childscrollview = view.findViewById(R.id.childscrollview);
+
 
 
         //주간 차트
@@ -157,19 +164,27 @@ public class Frag_Activity extends Fragment {
             }
         });
 
-        //이거 시발 왜 안됨
         //수직 리스트는 안됨, 스평 이동은 실행됨
         //전제 스크롤 뷰가 기능을 안하면 기능함
         //포커스는 잡는데 뷰페이지 내부 리스트 뷰 는 못잡아서 나는 오류?
-        //시발
-//        viewPager.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                Log.e("childscrollview222", "childscrollviewchildscrollviewchildscrollviewchildscrollview222");
-//                parentscrollview.requestDisallowInterceptTouchEvent(true);
-//                return false;
-//            }
-//        });
+        viewPager.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Log.e("childscrollview222", "childscrollviewchildscrollviewchildscrollviewchildscrollview222");
+                parentscrollview.requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+
+        parentscrollview.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Log.e("parentscrollview", "parentscrollviewparentscrollview");
+                return false;
+            }
+        });
+
+
 
 
         //뷰페이지 어뎀터 연결과 동작을 관리합니다
@@ -195,6 +210,8 @@ public class Frag_Activity extends Fragment {
 
         return view;
     }
+
+
 
     private void firebase() {
         Log.e("firebase", "firebase: firebase firebase");

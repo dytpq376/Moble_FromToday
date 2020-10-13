@@ -137,9 +137,11 @@ public class FoodDataActivity extends AppCompatActivity implements View.OnClickL
     public boolean onTouch(View view, MotionEvent motionEvent) {
         switch (view.getId()){
             case R.id.UserListView:
+                Log.e("UserListView", "UserListViewUserListViewUserListView: ");
                 userscroll.requestDisallowInterceptTouchEvent(true);
                 break;
             case R.id.DBListView:
+                Log.e("DBListView", "DBListViewDBListViewDBListView: ");
                 dbscroll.requestDisallowInterceptTouchEvent(true);
                 break;
         }

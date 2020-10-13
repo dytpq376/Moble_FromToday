@@ -1,15 +1,10 @@
 package com.example.fromtoday;
 
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.Adapter;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager2.adapter.FragmentViewHolder;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
     public ViewPagerAdapter(@NonNull FragmentManager fm) {

@@ -92,11 +92,12 @@ public class MyInfoActivity extends AppCompatActivity {
                         .requestLogout(new LogoutResponseCallback() {
                             @Override
                             public void onCompleteLogout() {
-
+                                Intent intent = new Intent(getApplicationContext(), Login.class);
+                                startActivity(intent);
+                                finish();
                             }
                         });
-                Intent intent = new Intent(getApplicationContext(), Login.class);
-                startActivity(intent);
+
             }
         });
 

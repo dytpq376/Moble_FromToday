@@ -135,22 +135,14 @@ public class Frag_People extends Fragment {
                             @Override
                             // 로그아웃 완료시 호출되는 함수
                             public void onCompleteLogout() {
-                                Intent intent =new Intent(getActivity(), Login.class);
-                                startActivity(intent);
+//                                Intent intent =new Intent(getActivity(), Login.class);
+//                                startActivity(intent);
                                 getActivity().finish();
                             }
                         });
 
             }
         });
-        return view;
-
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        System.out.println("여기는 onResume");
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -159,6 +151,15 @@ public class Frag_People extends Fragment {
 
             }
         });
+
+        return view;
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        System.out.println("여기는 onResume");
 
     }
 
@@ -209,6 +210,7 @@ public class Frag_People extends Fragment {
 
                         Intent intent =new Intent(getActivity(), Login.class);
                         startActivity(intent);
+                        getActivity().finish();
                     }
                 });
             }

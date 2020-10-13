@@ -67,7 +67,7 @@ public class Frag_Activity extends Fragment {
     private FragmentPagerAdapter fragmentPagerAdapter;
 
     //이중 스크롤뷰 선언
-   // private ScrollView childscrollview;
+    // private ScrollView childscrollview;
     private NestedScrollView parentscrollview;
 
     private ViewPager viewPager;
@@ -120,7 +120,7 @@ public class Frag_Activity extends Fragment {
 
         viewPager = view.findViewById(R.id.view_pager);
 
-/
+
 
 
         //스크롤 뷰

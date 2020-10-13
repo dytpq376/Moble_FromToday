@@ -13,6 +13,7 @@ public class FirebasePost {
     public String gender;
     public String age;
     public String birthday;
+    public Double total_kcal;
 
     public FirebasePost(){
         // Default constructor required for calls to DataSnapshot.getValue(FirebasePost.class)
@@ -27,10 +28,25 @@ public class FirebasePost {
         this.birthday = birthday;
     }
 
+    public FirebasePost(String profile, String name, String email, String gender, String age, String birthday, Double total_kcal) {
+        this.profile = profile;
+        this.name = name;
+        this.email = email;
+        this.gender = gender;
+        this.age = age;
+        this.birthday = birthday;
+        this.total_kcal = total_kcal;
+
+    }
+
+    public FirebasePost(double total_kcal) {
+        this.total_kcal = total_kcal;
+    }
+
+
     @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
-        result.put("profile", profile);
         result.put("name", name);
         result.put("age", email);
         result.put("height", gender);
@@ -39,3 +55,4 @@ public class FirebasePost {
         return result;
     }
 }
+

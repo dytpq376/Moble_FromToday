@@ -33,7 +33,7 @@ public class Frag_Activity_Vp_Run extends Fragment {
     private int calendar_week;
 
     //리사이클 뷰
-    private RecyclerView recyclerView;
+    public RecyclerView run_recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private ArrayList<Activity_DTO> arrayList;
@@ -59,13 +59,13 @@ public class Frag_Activity_Vp_Run extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.frag_activity_vp_walk, container, false);
+        view = inflater.inflate(R.layout.frag_activity_vp_run, container, false);
 
         //리사이클뷰 설정
-        recyclerView = view.findViewById(R.id.recyclerview);// 아디 연결
-        recyclerView.setHasFixedSize(true);//리사이클뷰 기존 성능 강화
+        run_recyclerView = view.findViewById(R.id.run_recyclerview);// 아디 연결
+        run_recyclerView.setHasFixedSize(true);//리사이클뷰 기존 성능 강화
         layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
+        run_recyclerView.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();// dto객체를 담을 리스트..어뎀터 쪽으로
         mPostReference = FirebaseDatabase.getInstance().getReference();
 
@@ -87,7 +87,7 @@ public class Frag_Activity_Vp_Run extends Fragment {
 
                 // double sumkcal = 0;
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {//데이터 리스트 추출
-                    Log.e("키2", snapshot.getKey());//walk_activity 의 키값들을 가져온다.
+                    Log.e("키2", snapshot.getKey());//run_activity 의 키값들을 가져온다.
                     Activity_DTO activity_dto = snapshot.getValue(Activity_DTO.class);//dto의 객체를 담는다.
                     result_run.add(activity_dto);//담은 데이터들을 배열 리스트에 넣고 리사이클러뷰에 보낼 준비를 한다.
                 }
@@ -103,7 +103,7 @@ public class Frag_Activity_Vp_Run extends Fragment {
         });
 
         adapter = new CustomAdapter_run(result_run, getActivity());
-        recyclerView.setAdapter(adapter);//리사이클러뷰에 어뎁터 연결
+        run_recyclerView.setAdapter(adapter);//리사이클러뷰에 어뎁터 연결
 
         return view;
     }

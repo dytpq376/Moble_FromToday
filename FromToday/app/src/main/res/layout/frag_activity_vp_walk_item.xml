@@ -7,7 +7,7 @@
 
     <TextView
         android:id="@+id/tv_week"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="요일" />
 
@@ -20,7 +20,7 @@
             android:id="@+id/tv_distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="3"
             android:gravity="right"
             android:text="거리" />
 
@@ -35,7 +35,7 @@
             android:id="@+id/tv_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="3"
             android:gravity="right"
             android:text="시간" />
 
@@ -50,7 +50,7 @@
             android:id="@+id/tv_kcal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="3"
             android:gravity="right"
             android:text="칼로리" />
 

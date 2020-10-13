@@ -56,7 +56,7 @@ public class Frag_Activity_Vp_Walk extends Fragment {
     private int calendar_week;
 
     //리사이클 뷰
-    private RecyclerView recyclerView;
+    private RecyclerView walk_recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private ArrayList<Activity_DTO> arrayList;
@@ -68,16 +68,18 @@ public class Frag_Activity_Vp_Walk extends Fragment {
         return frag_activity_vp_walk;
     }
 
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.frag_activity_vp_walk, container, false);
 
         //리사이클뷰 설정
-        recyclerView = view.findViewById(R.id.recyclerview);// 아디 연결
-        recyclerView.setHasFixedSize(true);//리사이클뷰 기존 성능 강화
+        walk_recyclerView = view.findViewById(R.id.walk_recyclerview);// 아디 연결
+        walk_recyclerView.setHasFixedSize(true);//리사이클뷰 기존 성능 강화
         layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
+        walk_recyclerView.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();// dto객체를 담을 리스트..어뎀터 쪽으로
         mPostReference = FirebaseDatabase.getInstance().getReference();
 
@@ -115,7 +117,7 @@ public class Frag_Activity_Vp_Walk extends Fragment {
         });
 
         adapter = new CustomAdapter(result_walk, getActivity());
-        recyclerView.setAdapter(adapter);//리사이클러뷰에 어뎁터 연결
+        walk_recyclerView.setAdapter(adapter);//리사이클러뷰에 어뎁터 연결
 
         return view;
     }

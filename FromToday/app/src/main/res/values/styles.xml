@@ -6,7 +6,7 @@
         <item name="colorPrimaryDark">#111111</item>
         <item name="colorAccent">@color/colorAccent</item>
 
-        <!--        view page 선언 입니다.-->
+<!--        view page 선언 입니다.-->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>

@@ -75,7 +75,7 @@ public class Frag_Activity extends Fragment {
 
     //DTO
     private DatabaseReference mPostReference;
-    private DatabaseReference addAllKcal;
+//    private DatabaseReference addAllKcal;
 
     String resultactivity;
 
@@ -404,33 +404,33 @@ public class Frag_Activity extends Fragment {
         String strEmail = user_Value.getString("email", null);
         strEmail = strEmail.replaceAll("@", "").replaceAll("[.]", "");
         mPostReference = FirebaseDatabase.getInstance().getReference();
-        addAllKcal = FirebaseDatabase.getInstance().getReference("activity");
+//        addAllKcal = FirebaseDatabase.getInstance().getReference("activity");
 
 //        Tkcal = new FirebasePost(total_sumkcal);
         mPostReference.child("users").child(strEmail).child("total_kcal").setValue(sum_all);
 
-        addAllKcal.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Iterator<DataSnapshot> child = dataSnapshot.getChildren().iterator();
-
-                while(child.hasNext())
-                {
-                    //찾고자 하는 ID값은 key로 존재하는 값
-                    if(child.next().getKey().equals("walk_kcal"))
-                    {
-
-                    }
-
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+//        addAllKcal.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                Iterator<DataSnapshot> child = dataSnapshot.getChildren().iterator();
+//
+//                while(child.hasNext())
+//                {
+//                    //찾고자 하는 ID값은 key로 존재하는 값
+//                    if(child.next().getKey().equals("walk_kcal"))
+//                    {
+//
+//                    }
+//
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
 
 
     }

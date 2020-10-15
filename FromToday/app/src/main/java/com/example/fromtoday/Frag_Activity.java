@@ -30,6 +30,7 @@ import org.eazegraph.lib.models.BarModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -74,6 +75,7 @@ public class Frag_Activity extends Fragment {
 
     //DTO
     private DatabaseReference mPostReference;
+    private DatabaseReference addAllKcal;
 
     String resultactivity;
 
@@ -105,7 +107,7 @@ public class Frag_Activity extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
 
 
-    double sum_all;
+    private double sum_all;
 
 
     @Nullable
@@ -299,10 +301,7 @@ public class Frag_Activity extends Fragment {
         total_sumkcal = walk_sumkcal + run_sumkcal + bike_sumkcal;
 
 
-        //파이어베이스에 올라갈 일주일치 총 소모 칼로리
-        sum_all = chart_sundayKcal + chart_mondayKcal + chart_tuesdayKcal + chart_wednesdayKcal + chart_thursdayKcal + chart_fridayKcal + chart_saturdayKcal ;
 
-        Totalkcal();
 
 
         //달력 날자 받아오기
@@ -375,27 +374,63 @@ public class Frag_Activity extends Fragment {
             // BarChar 데이터 입력
             //저장된 요일변수를 넣어주어 차트에 데이터를 넣어준다.
             mBarChart.addBar(new BarModel("일", chart_sundayKcal, 0xFFCff0DA));
+            Log.e("chart_sundayKcal", String.valueOf(chart_sundayKcal));
             mBarChart.addBar(new BarModel("월", chart_mondayKcal, 0xFF88DBA3));
+            Log.e("chart_mondayKcal", String.valueOf(chart_mondayKcal));
             mBarChart.addBar(new BarModel("화", chart_tuesdayKcal, 0xFF90C695));
+            Log.e("chart_tuesdayKcal", String.valueOf(chart_tuesdayKcal));
             mBarChart.addBar(new BarModel("수", chart_wednesdayKcal, 0xFF3B8686));
+            Log.e("chart_wednesdayKcal", String.valueOf(chart_wednesdayKcal));
             mBarChart.addBar(new BarModel("목", chart_thursdayKcal, 0xFF3AC569));
+            Log.e("chart_thursdayKcal", String.valueOf(chart_thursdayKcal));
             mBarChart.addBar(new BarModel("금", chart_fridayKcal, 0xFF3B8686));
+            Log.e("chart_fridayKcal", String.valueOf(chart_fridayKcal));
             mBarChart.addBar(new BarModel("토", chart_saturdayKcal, 0xFFCFF09E));
+            Log.e("chart_saturdayKcal", String.valueOf(chart_saturdayKcal));
 
             // BarChar 애니메이션 효과로 시작
             mBarChart.startAnimation();
         }
+
+
     }
 
     private void Totalkcal(){
+
+        sum_all = chart_sundayKcal + chart_mondayKcal + chart_tuesdayKcal + chart_wednesdayKcal + chart_thursdayKcal + chart_fridayKcal + chart_saturdayKcal ;
+
 
         user_Value = getActivity().getSharedPreferences("currentUser", MODE_PRIVATE);
         String strEmail = user_Value.getString("email", null);
         strEmail = strEmail.replaceAll("@", "").replaceAll("[.]", "");
         mPostReference = FirebaseDatabase.getInstance().getReference();
+        addAllKcal = FirebaseDatabase.getInstance().getReference("activity");
 
 //        Tkcal = new FirebasePost(total_sumkcal);
         mPostReference.child("users").child(strEmail).child("total_kcal").setValue(sum_all);
+
+        addAllKcal.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Iterator<DataSnapshot> child = dataSnapshot.getChildren().iterator();
+
+                while(child.hasNext())
+                {
+                    //찾고자 하는 ID값은 key로 존재하는 값
+                    if(child.next().getKey().equals("walk_kcal"))
+                    {
+
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
 
     }
@@ -406,5 +441,6 @@ public class Frag_Activity extends Fragment {
         Log.e("onResume", "onResume: onResumeon Resume");
         super.onResume();
         firebase();
+        Totalkcal();
     }
 }

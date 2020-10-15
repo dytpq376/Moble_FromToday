@@ -198,12 +198,6 @@ public class Login extends AppCompatActivity {
 
         AlertDialog.Builder dialogue = new AlertDialog.Builder(Login.this);
         dialogue.setTitle("").setMessage("로그인중입니다.");
-        dialogue.setPositiveButton("ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
         AlertDialog alertDialog = dialogue.create();
         alertDialog.show();
 

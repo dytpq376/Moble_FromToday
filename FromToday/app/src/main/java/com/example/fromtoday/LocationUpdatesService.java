@@ -308,7 +308,7 @@ public class LocationUpdatesService extends Service {
 
         // The PendingIntent to launch activity.
         PendingIntent activityPendingIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, Activity_Run.class), 0);
+                new Intent(this, Activity_Map_Run.class), 0);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
 //                .addAction(R.drawable.run, getString(R.string.launch_activity),//스트링 스타일로 특정 문자열을 찍어줍니다.

@@ -69,7 +69,7 @@ public class Activity_Map_Run extends AppCompatActivity
         ActivityCompat.OnRequestPermissionsResultCallback,
         PlacesListener {
 
-    private static final String TAG = Activity_Run.class.getSimpleName();
+    private static final String TAG = Activity_Map_Run.class.getSimpleName();
 
     // 위치 업데이트를 가져오는 데 사용되는 서비스에 대한 참조.
     //서비스 클래스를 참조
@@ -471,6 +471,7 @@ public class Activity_Map_Run extends AppCompatActivity
                 mRequestLocationUpdatesButton.setEnabled(true);
                 mRemoveLocationUpdatesButton.setEnabled(false);
 
+                finish();
 
             }
         });

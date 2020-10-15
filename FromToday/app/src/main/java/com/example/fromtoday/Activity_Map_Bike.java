@@ -69,7 +69,7 @@ public class Activity_Map_Bike extends AppCompatActivity
         ActivityCompat.OnRequestPermissionsResultCallback,
         PlacesListener {
 
-    private static final String TAG = Activity_Run.class.getSimpleName();
+    private static final String TAG = Activity_Map_Bike.class.getSimpleName();
 
     // 위치 업데이트를 가져오는 데 사용되는 서비스에 대한 참조.
     //서비스 클래스를 참조
@@ -138,7 +138,7 @@ public class Activity_Map_Bike extends AppCompatActivity
     private LocationRequest locationRequest;
     private Location location;
 
-    SharedPreferences runResult;
+    SharedPreferences bikeResult;
 
     private View mLayout;  // Snackbar 사용하기 위해서는 View가 필요합니다.
     // (참고로 Toast에서는 Context가 필요했습니다.)
@@ -408,8 +408,8 @@ public class Activity_Map_Bike extends AppCompatActivity
                 db_speed = Double.parseDouble(String.format("%.1f", avgspeed));
 
                 //내장 디비 연결을 합니다.
-                runResult = getSharedPreferences("runResult", MODE_PRIVATE);    // activityValue이름의 파일 생성
-                SharedPreferences.Editor editor = runResult.edit(); //sharedPreferences를 제어할 editor를 선언
+                bikeResult = getSharedPreferences("runResult", MODE_PRIVATE);    // activityValue이름의 파일 생성
+                SharedPreferences.Editor editor = bikeResult.edit(); //sharedPreferences를 제어할 editor를 선언
                 editor.putString("speed", String.valueOf(db_speed)); // key,value 형식으로 저장
                 editor.putString("distance", String.valueOf(db_distance)); // key,value 형식으로 저장
                 editor.putString("time", String.valueOf(db_time)); // key,value 형식으로 저장
@@ -421,10 +421,10 @@ public class Activity_Map_Bike extends AppCompatActivity
 
 
                 //값이 확인용 출력
-                String speedValue = runResult.getString("speed", null);
-                String distanceValue = runResult.getString("distance", null);
-                String timeValue = runResult.getString("time", null);
-                String kcalValue = runResult.getString("kcal", null);
+                String speedValue = bikeResult.getString("speed", null);
+                String distanceValue = bikeResult.getString("distance", null);
+                String timeValue = bikeResult.getString("time", null);
+                String kcalValue = bikeResult.getString("kcal", null);
                 System.out.println("speedValue======:" + speedValue);
                 System.out.println("distanceValue======:" + distanceValue);
                 System.out.println("timeValue======:" + timeValue);
@@ -443,15 +443,15 @@ public class Activity_Map_Bike extends AppCompatActivity
                 calendar_week = calendar.get(Calendar.DAY_OF_WEEK);
 
                 //파베 저장용 데이터 지정
-                activity_dto.run_distance = distanceValue;
-                activity_dto.run_speed = speedValue;
-                activity_dto.run_time = timeValue;
-                activity_dto.run_kcal = kcalValue;
-                activity_dto.run_Week = String.valueOf(calendar_week);
+                activity_dto.bike_distance = distanceValue;
+                activity_dto.bike_speed = speedValue;
+                activity_dto.bike_time = timeValue;
+                activity_dto.bike_kcal = kcalValue;
+                activity_dto.bike_Week = String.valueOf(calendar_week);
 
                 //파베에 데이터 저장
                 //데이터를 쌓아주고 싶으면 child뒤에 push를 사용한다.
-                mPostReference.child("users").child(strEmail).child("activity").child("run_activity").push().setValue(activity_dto);
+                mPostReference.child("users").child(strEmail).child("activity").child("bike_activity").push().setValue(activity_dto);
 
                 Toast.makeText(Activity_Map_Bike.this, "DB에저장되었습니다.", Toast.LENGTH_SHORT).show();
                 //값 초기화 부분
@@ -470,6 +470,7 @@ public class Activity_Map_Bike extends AppCompatActivity
                 mRequestLocationUpdatesButton.setEnabled(true);
                 mRemoveLocationUpdatesButton.setEnabled(false);
 
+                finish();
 
             }
         });

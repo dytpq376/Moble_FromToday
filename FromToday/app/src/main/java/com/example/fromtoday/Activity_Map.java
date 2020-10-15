@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -143,6 +144,11 @@ public class Activity_Map extends AppCompatActivity
     private View mLayout;  // Snackbar 사용하기 위해서는 View가 필요합니다.
     // (참고로 Toast에서는 Context가 필요했습니다.)
     List<Marker> previous_marker = null;
+
+    //액티비티 버튼
+    private LinearLayout btn_walk;
+    private LinearLayout btn_run;
+    private LinearLayout btn_bike;
 
 
     // 서비스에 대한 연결 상태 모니터링,  예스 바인딩
@@ -380,6 +386,10 @@ public class Activity_Map extends AppCompatActivity
         tv_time = findViewById(R.id.tvtime);
         tv_kcal = findViewById(R.id.tv_kcal);
 
+        //액티비티 버튼
+//        btn_walk = findViewById(R.id.linear_walk);
+//        btn_run = findViewById(R.id.linear_run);
+//        btn_bike = findViewById(R.id.linear_bike);
 
         mRequestLocationUpdatesButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -397,6 +407,8 @@ public class Activity_Map extends AppCompatActivity
                 }
                 mRequestLocationUpdatesButton.setEnabled(false);
                 mRemoveLocationUpdatesButton.setEnabled(true);
+
+
             }
         });
 
@@ -471,6 +483,7 @@ public class Activity_Map extends AppCompatActivity
                 mRequestLocationUpdatesButton.setEnabled(true);
                 mRemoveLocationUpdatesButton.setEnabled(false);
 
+                finish();
 
             }
         });

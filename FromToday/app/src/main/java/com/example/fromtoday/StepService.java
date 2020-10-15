@@ -52,6 +52,9 @@ public class StepService extends Service implements SensorEventListener {
     public int minute, second;
     public int kcal = 0;
     public double kilometer = 0.0;
+
+    public int total_Walk;
+
     // 요일 변수
     public int sundayKcal, mondayKcal, tuesdayKcal, wednesdayKcal;
     public int thursdayKcal, fridayKcal, saturdayKcal;
@@ -301,6 +304,10 @@ public class StepService extends Service implements SensorEventListener {
                     fridayKcal = weekKcal.getInt("fridayKcal", 0);
                     saturdayKcal = weekKcal.getInt("saturdayKcal", 0);
 
+
+
+
+
                     // ========================= 콜백으로 Frag_Home 에 전달 =========================
                     if (callback != null) {
                         Log.i("geon", "callback != null 들어옴 ");
@@ -527,5 +534,11 @@ public class StepService extends Service implements SensorEventListener {
                 break;
         }
     }
+
+    private void totalWalk(){
+
+
+    }
+
 
 }

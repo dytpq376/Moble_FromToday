@@ -80,7 +80,6 @@ http://www.apache.org/licenses/LICENSE-2.0
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_margin="3dp"
-                    android:src="@drawable/img_run"
                     android:adjustViewBounds="true" />
 
                 <TextView
@@ -122,7 +121,6 @@ http://www.apache.org/licenses/LICENSE-2.0
                             android:id="@+id/imageLocation"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/img_distance"
                             android:layout_marginRight="3dp" />
 
                         <TextView
@@ -177,7 +175,6 @@ http://www.apache.org/licenses/LICENSE-2.0
                             android:id="@+id/imageFire"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/img_speed"
                             android:layout_marginRight="3dp" />
 
                         <TextView
@@ -230,7 +227,6 @@ http://www.apache.org/licenses/LICENSE-2.0
                             android:id="@+id/imageTimer"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/img_time"
                             android:layout_marginRight="3dp" />
 
                         <TextView

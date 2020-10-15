@@ -286,11 +286,84 @@
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                app:cardBackgroundColor="#ffff"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="5dp"
+                app:cardPreventCornerOverlap="false"
+                app:contentPadding="0dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/imageMap"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_margin="3dp"
+                        android:adjustViewBounds="true"
+                        app:srcCompat="@drawable/map" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="0dp"
+                        android:gravity="center"
+                        android:text="주변 피트니스 센터"
+                        android:textColor="#000000"
+                        android:textSize="15dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="right">
+
+                        <ImageView
+                            android:id="@+id/search"
+                            android:layout_width="wrap_content"
+                            android:layout_height="35dp"
+                            android:background="#FFFFFF"
+                            android:text="검색"
+                            android:textColor="#000000"
+                            app:srcCompat="@drawable/search" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                app:cardBackgroundColor="#ffff"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="5dp"
+                app:cardPreventCornerOverlap="false"
+                app:contentPadding="0dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="500dp"
+                    android:id="@+id/layout_main"
+                    android:orientation="vertical"
+                    tools:context=".MainActivity" >
+
+                    <fragment
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.8"
+                        android:id="@+id/map"
+                        tools:context=".MapsActivity"
+                        android:name="com.google.android.gms.maps.SupportMapFragment" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="30dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -337,31 +410,7 @@
                 </androidx.cardview.widget.CardView>
 
             </LinearLayout>
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                app:cardBackgroundColor="#ffff"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="5dp"
-                app:cardPreventCornerOverlap="false"
-                app:contentPadding="0dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="500dp"
-                    android:id="@+id/layout_main"
-                    android:orientation="vertical"
-                    tools:context=".MainActivity" >
 
-                    <fragment
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.8"
-                        android:id="@+id/map"
-                        tools:context=".MapsActivity"
-                        android:name="com.google.android.gms.maps.SupportMapFragment" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
             <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -372,15 +421,6 @@
                 app:cardElevation="5dp"
                 app:cardPreventCornerOverlap="false"
                 app:contentPadding="0dp">
-
-                <Button
-                    android:id="@+id/search"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:text="내 주변 헬스장 검색"
-                    android:textColor="#000000"
-                    android:textSize="15dp"
-                    android:background="#FFFFFF"/>
 
             </androidx.cardview.widget.CardView>
 

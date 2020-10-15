@@ -214,7 +214,6 @@ public class Activity_Run extends AppCompatActivity implements
                 db_speed = Double.parseDouble(String.format("%.1f", avgspeed));
                 Log.e(TAG, "db_speed: 디비 저장 스피드는" + db_speed);
 
-
                 //내장 db에 저장 쉐어드프리퍼런스를 사용하여 값을
                 runResult = getSharedPreferences("runResult", MODE_PRIVATE);    // activityValue이름의 파일 생성
                 SharedPreferences.Editor editor = runResult.edit(); //sharedPreferences를 제어할 editor를 선언

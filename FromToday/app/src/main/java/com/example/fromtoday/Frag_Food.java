@@ -79,8 +79,8 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
     private static final int REQUESTCODE_MORNIGN = 1;
     private static final int REQUESTCODE_AFTERNOON = 2;
     private static final int REQUESTCODE_DINNER = 3;
-    private static final int MALE = 3200;
-    private static final int FEMALE = 2600;
+    private static final int MALE = 2500;
+    private static final int FEMALE = 2000;
 
 
     //칼로리 계산
@@ -382,7 +382,6 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
         morningfood.setText("");
         afternoonfood.setText("");
         dinnerfood.setText("");
-
         if(pre.getString("breakfast",null)!= null && pre.getString("user_Breakfast",null) != null){
             morningfood.append("   "+pre.getString("breakfast",null) + pre.getString("user_Breakfast",null));
             morningcalrorie.setText(pre.getString("brakfastCalrorie",null) + "kcal");
@@ -463,12 +462,12 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
 
         if(gender.equals("male")){
             progress.setMax(MALE);
-            tvbartext.setText(" / 3200 kcal");
+            tvbartext.setText(" / 2500 kcal");
             progress.setProgress(totalSum);
         }
         else if(gender.equals("female")){
             progress.setMax(FEMALE);
-            tvbartext.setText(" / 2600 kcal");
+            tvbartext.setText(" / 2000 kcal");
             progress.setProgress(totalSum);
         }
     }
@@ -539,6 +538,7 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
             case 1:
                 int sunday = dayKcal.getInt("dayKcal",0);
                 editor.putInt("sunday",sunday);
+                editor.apply();
                 Log.i("Geon", "sundayKcal : " );
                 if(alarmCall == true) {
                     editor = dayKcal.edit();
@@ -548,49 +548,49 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
                     editor.remove("thursday");
                     editor.remove("friday");
                     editor.remove("saturday");
-                    editor.commit();
+                    editor.apply();
                 }
                 alarmCall = false;
                 break;
             case 2:
                 int monday = dayKcal.getInt("dayKcal",0);
                 editor.putInt("monday",monday);
-                editor.commit();
+                editor.apply();
                 alarmCall = false;
                 Log.i("Geon", "mondayKcal : " );
                 break;
             case 3:
                 int tuesday = dayKcal.getInt("dayKcal",0);
                 editor.putInt("tuesday",tuesday);
-                editor.commit();
+                editor.apply();
                 alarmCall = false;
                 Log.i("Geon", "tuesdayKcal : " );
                 break;
             case 4:
                 int wednesday = dayKcal.getInt("dayKcal",0);
                 editor.putInt("wednesday",wednesday);
-                editor.commit();
+                editor.apply();
                 alarmCall = false;
                 Log.i("Geon", "wednesdayKcal : " );
                 break;
             case 5:
                 int thursday = dayKcal.getInt("dayKcal",0);
                 editor.putInt("thursday",thursday);
-                editor.commit();
+                editor.apply();
                 alarmCall = false;
                 Log.i("Geon", "thursdayKcal : "+thursday );
                 break;
             case 6:
                 int friday = dayKcal.getInt("dayKcal",0);
                 editor.putInt("friday",friday);
-                editor.commit();
+                editor.apply();
                 alarmCall = false;
                 Log.i("Geon", "fridayKcal : ");
                 break;
             case 7:
                 int saturday = dayKcal.getInt("dayKcal",0);
                 editor.putInt("saturday",saturday);
-                editor.commit();
+                editor.apply();
                 alarmCall = false;
                 Log.i("Geon", "saturdayKcal : " );
                 break;

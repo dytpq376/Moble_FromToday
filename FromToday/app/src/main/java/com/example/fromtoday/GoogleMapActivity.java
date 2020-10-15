@@ -179,8 +179,8 @@ public class GoogleMapActivity extends AppCompatActivity
 
         previous_marker = new ArrayList<Marker>();
 
-        Button button = (Button)findViewById(R.id.search);
-        button.setOnClickListener(new View.OnClickListener() {
+        ImageView search = findViewById(R.id.search);
+        search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showPlaceInformation(currentPosition);

@@ -8,6 +8,7 @@ import android.util.SparseBooleanArray;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -19,21 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FoodDataActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener {
-    //    public static String getEmail() {
-//        return email;
-//    }
-//
-//    public static void setEmail(String email) {
-//        FoodDataActivity.email = email;
-//    }
-//
-//    public static String email;
     private String email;
     //리스트뷰
     private ListView DBListView;
     private ListView userListView;
     //추가
-    private ImageView add;
+    private Button add;
     private ImageView useradd;
     private ImageView userdelete;
     private ImageView back;
@@ -66,7 +58,7 @@ public class FoodDataActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         Log.d("김성원","여기는onCreate");
         setContentView(R.layout.dblist);
-
+        //FoodDataActivity 에서 사용할 xml id
         dbscroll=findViewById(R.id.dbscroll);
         userscroll=findViewById(R.id.userscroll);
         DBListView = findViewById(R.id.DBListView);
@@ -99,7 +91,7 @@ public class FoodDataActivity extends AppCompatActivity implements View.OnClickL
 
         System.out.println("email value: "+email);
     }
-
+    // 내장 db 초기화 및 listview 초기화
     private void setDBListViewAdapter() {
 
         DataAdapter mDbHelper = new DataAdapter(getApplicationContext());
@@ -120,7 +112,7 @@ public class FoodDataActivity extends AppCompatActivity implements View.OnClickL
         DBListView.setAdapter(dbAdapter);
     }
 
-    //식단추가
+    //FoodDataActivity 에서 사용하는 onClick Listener
     @Override
     public void onClick(View view) {
         Frag_Food food = new Frag_Food();
@@ -141,7 +133,7 @@ public class FoodDataActivity extends AppCompatActivity implements View.OnClickL
                 break;
         }
     }
-
+    //이중 스크롤 뷰 중복 터치 방지
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         switch (view.getId()){
@@ -154,23 +146,9 @@ public class FoodDataActivity extends AppCompatActivity implements View.OnClickL
         }
         return false;
     }
-
-//    //DB초기화
-//    private void initLoadDB() {
-//
-//        DataAdapter mDbHelper = new DataAdapter(getApplicationContext());
-//        mDbHelper.createDatabase();
-//        mDbHelper.open();
-//
-//        // db에 있는 값들을 model을 적용해서 넣는다.
-//        rtList = mDbHelper.getTableData();
-//
-//        // db 닫기
-//        mDbHelper.close();
-//    }
-
+    //사용자 식단 list 초기화
     private void setUserListViewAdapter(){
-
+        // 로그인한 email 값에 따라 저장 되어있는 사용자 식단 불러옴
         pref = getSharedPreferences(""+email, MODE_PRIVATE);
 
         userList.clear();
@@ -193,10 +171,11 @@ public class FoodDataActivity extends AppCompatActivity implements View.OnClickL
     private void userFoodAdd() {
         String str = editfood.getText().toString();
         String str1 = editcalrorie.getText().toString();
-
+        // 입력하지 않은 값이 있을시 toast 메시지
         if(editfood.getText().length() == 0 || editcalrorie.getText().length() == 0)  {
             Toast.makeText(this, "입력하지 않은 값이 있습니다.", Toast.LENGTH_SHORT).show();
         }
+        // pref 저장소에 사용자 식단 추가
         else {
             SharedPreferences.Editor editor = pref.edit();
             int i = pref.getInt("count", 0);
@@ -254,6 +233,7 @@ public class FoodDataActivity extends AppCompatActivity implements View.OnClickL
         setResult(RESULT_OK);
         finish();
     }
+    //사용자 식단 삭제
     private void delete() {
         SharedPreferences.Editor editor = pref.edit();
         SparseBooleanArray checkedItems = userListView.getCheckedItemPositions();
@@ -261,7 +241,7 @@ public class FoodDataActivity extends AppCompatActivity implements View.OnClickL
         int adapterCount = userAdapter.getCount();
         //pref 저장소에 int값 반환 defalult 시 0
         int count = pref.getInt("count",0);
-
+        // 사용자 식단 저장소에 listview 에서 선택한 값 삭제
         for (int i = 0; i < adapterCount; i++) {
             if (checkedItems.get(i) == true) {
                 //삭제
@@ -282,13 +262,12 @@ public class FoodDataActivity extends AppCompatActivity implements View.OnClickL
 
         editor.putInt("count", count);
         editor.commit();
+        //삭제후 사용자 식단 listview 초기화
         setUserListViewAdapter();
     }
-
+    // 식단을 짜는 도중 뒤로가기 버튼을 눌렀을 때 예외처리
     @Override
     public void onBackPressed() {
-        //super.onBackPressed();
-        //Frag_Food food = new Frag_Food();
         Frag_Food.setMenu_Food(null);
         Frag_Food.setUserFood(null);
         finish();

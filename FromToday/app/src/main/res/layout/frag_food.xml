@@ -384,7 +384,7 @@
                             android:layout_height="25dp"
                             android:layout_margin="3dp"
                             android:adjustViewBounds="true"
-                            android:src="@drawable/run"/>
+                            android:src="@drawable/egg"/>
 
                         <TextView
                             android:id="@+id/textRecord"

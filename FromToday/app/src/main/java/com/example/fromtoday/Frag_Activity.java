@@ -104,6 +104,8 @@ public class Frag_Activity extends Fragment {
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
+    private double sum_all;
+
 
     @Nullable
     @Override
@@ -372,11 +374,56 @@ public class Frag_Activity extends Fragment {
         }
     }
 
+    private void Totalkcal(){
+
+        sum_all = chart_sundayKcal + chart_mondayKcal + chart_tuesdayKcal + chart_wednesdayKcal + chart_thursdayKcal + chart_fridayKcal + chart_saturdayKcal ;
+
+
+        user_Value = getActivity().getSharedPreferences("currentUser", MODE_PRIVATE);
+        String strEmail = user_Value.getString("email", null);
+        strEmail = strEmail.replaceAll("@", "").replaceAll("[.]", "");
+        mPostReference = FirebaseDatabase.getInstance().getReference();
+//        addAllKcal = FirebaseDatabase.getInstance().getReference("activity");
+
+//        Tkcal = new FirebasePost(total_sumkcal);
+        mPostReference.child("users").child(strEmail).child("total_kcal").setValue(sum_all);
+
+//        addAllKcal.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                Iterator<DataSnapshot> child = dataSnapshot.getChildren().iterator();
+//
+//                while(child.hasNext())
+//                {
+//                    //찾고자 하는 ID값은 key로 존재하는 값
+//                    if(child.next().getKey().equals("walk_kcal"))
+//                    {
+//
+//                    }
+//
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+
+
+    }
+
+
+
+
+
 
     @Override
     public void onResume() {
         Log.e("onResume", "onResume: onResumeon Resume");
         super.onResume();
         firebase();
+        Totalkcal();
     }
 }

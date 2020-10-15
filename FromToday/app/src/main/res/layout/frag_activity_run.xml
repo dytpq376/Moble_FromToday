@@ -36,12 +36,13 @@ http://www.apache.org/licenses/LICENSE-2.0
         app:contentPadding="0dp"
         android:layout_margin="8dp">
         <LinearLayout
+            android:id="@+id/run_main"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical" >
 
             <fragment
-                android:id="@+id/map"
+                android:id="@+id/run_map"
                 android:name="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="match_parent"
                 android:layout_height="400dp"
@@ -80,6 +81,7 @@ http://www.apache.org/licenses/LICENSE-2.0
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_margin="3dp"
+                    android:src="@drawable/img_run"
                     android:adjustViewBounds="true" />
 
                 <TextView

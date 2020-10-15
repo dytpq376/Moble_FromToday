@@ -30,7 +30,6 @@ import org.eazegraph.lib.models.BarModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Iterator;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -75,7 +74,6 @@ public class Frag_Activity extends Fragment {
 
     //DTO
     private DatabaseReference mPostReference;
-//    private DatabaseReference addAllKcal;
 
     String resultactivity;
 
@@ -105,9 +103,6 @@ public class Frag_Activity extends Fragment {
 
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
-
-
-    private double sum_all;
 
 
     @Nullable
@@ -141,8 +136,8 @@ public class Frag_Activity extends Fragment {
         btn_walk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), Activity_Walk.class);
-                startActivity(intent);
+                Intent intent1 = new Intent(getActivity(), Activity_Map.class);
+                startActivity(intent1);
 //                btn_run.setEnabled(false);
 //                btn_bike.setEnabled(false);
             }
@@ -151,7 +146,7 @@ public class Frag_Activity extends Fragment {
         btn_run.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent2 = new Intent(getActivity(), Activity_Run.class);
+                Intent intent2 = new Intent(getActivity(), Activity_Map_Run.class);
                 startActivity(intent2);
 //                btn_walk.setEnabled(false);
 //                btn_bike.setEnabled(false);
@@ -161,7 +156,7 @@ public class Frag_Activity extends Fragment {
         btn_bike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent3 = new Intent(getActivity(), Activity_Bike.class);
+                Intent intent3 = new Intent(getActivity(), Activity_Map_Bike.class);
                 startActivity(intent3);
 //                btn_walk.setEnabled(false);
 //                btn_run.setEnabled(false);
@@ -300,10 +295,6 @@ public class Frag_Activity extends Fragment {
         Log.e("bike_sumkcal", String.valueOf(bike_sumkcal));
         total_sumkcal = walk_sumkcal + run_sumkcal + bike_sumkcal;
 
-
-
-
-
         //달력 날자 받아오기
         Calendar calendar = Calendar.getInstance(); //캘린더 인스턴스 받아오기
         //Calendar.DAY_OF_WEEK로 오늘 요일을 받아온후 변수에 저장해준다 이 변수는 오늘 요일이다.
@@ -312,10 +303,10 @@ public class Frag_Activity extends Fragment {
         //받아온 calendar_week는 요일이 상수로 표현
         //일요일 = 1, 월요일 = 2, 화요일 = 3 ........... 토요일 = 7 이런 방식으로 받아온다.
 
-        //프리퍼런스 값 받아오기
-        runResult = getActivity().getSharedPreferences("runResult", MODE_PRIVATE);
-        //프리퍼런스의 특정값을 받아와서 변수에 저장
-        sumkcal = runResult.getString("sumkcal", null);
+//        //프리퍼런스 값 받아오기
+//        runResult = getActivity().getSharedPreferences("runResult", MODE_PRIVATE);
+//        //프리퍼런스의 특정값을 받아와서 변수에 저장
+//        sumkcal = runResult.getString("sumkcal", null);
 
         //요일별 변수에 프리퍼 런스로 받아온 값을 저장해 준다.
         //요일에 오늘 운동한 칼로리 값이 요일변수에 저장된다.
@@ -326,11 +317,6 @@ public class Frag_Activity extends Fragment {
                     chart_sundayKcal = Float.parseFloat(String.valueOf(total_sumkcal));
                     Log.e("chart_sundayKcal", String.valueOf(chart_sundayKcal));
                     total_sumkcal = 0;
-
-                    //차트 초기화 구문입니다.
-                    //기본 차트 퍼미션은 거짓입니다.
-
-
                     break;
                 case 2:
                     chart_mondayKcal = Float.parseFloat(String.valueOf(total_sumkcal));
@@ -374,65 +360,16 @@ public class Frag_Activity extends Fragment {
             // BarChar 데이터 입력
             //저장된 요일변수를 넣어주어 차트에 데이터를 넣어준다.
             mBarChart.addBar(new BarModel("일", chart_sundayKcal, 0xFFCff0DA));
-            Log.e("chart_sundayKcal", String.valueOf(chart_sundayKcal));
             mBarChart.addBar(new BarModel("월", chart_mondayKcal, 0xFF88DBA3));
-            Log.e("chart_mondayKcal", String.valueOf(chart_mondayKcal));
             mBarChart.addBar(new BarModel("화", chart_tuesdayKcal, 0xFF90C695));
-            Log.e("chart_tuesdayKcal", String.valueOf(chart_tuesdayKcal));
             mBarChart.addBar(new BarModel("수", chart_wednesdayKcal, 0xFF3B8686));
-            Log.e("chart_wednesdayKcal", String.valueOf(chart_wednesdayKcal));
             mBarChart.addBar(new BarModel("목", chart_thursdayKcal, 0xFF3AC569));
-            Log.e("chart_thursdayKcal", String.valueOf(chart_thursdayKcal));
             mBarChart.addBar(new BarModel("금", chart_fridayKcal, 0xFF3B8686));
-            Log.e("chart_fridayKcal", String.valueOf(chart_fridayKcal));
             mBarChart.addBar(new BarModel("토", chart_saturdayKcal, 0xFFCFF09E));
-            Log.e("chart_saturdayKcal", String.valueOf(chart_saturdayKcal));
 
             // BarChar 애니메이션 효과로 시작
             mBarChart.startAnimation();
         }
-
-
-    }
-
-    private void Totalkcal(){
-
-        sum_all = chart_sundayKcal + chart_mondayKcal + chart_tuesdayKcal + chart_wednesdayKcal + chart_thursdayKcal + chart_fridayKcal + chart_saturdayKcal ;
-
-
-        user_Value = getActivity().getSharedPreferences("currentUser", MODE_PRIVATE);
-        String strEmail = user_Value.getString("email", null);
-        strEmail = strEmail.replaceAll("@", "").replaceAll("[.]", "");
-        mPostReference = FirebaseDatabase.getInstance().getReference();
-//        addAllKcal = FirebaseDatabase.getInstance().getReference("activity");
-
-//        Tkcal = new FirebasePost(total_sumkcal);
-        mPostReference.child("users").child(strEmail).child("total_kcal").setValue(sum_all);
-
-//        addAllKcal.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                Iterator<DataSnapshot> child = dataSnapshot.getChildren().iterator();
-//
-//                while(child.hasNext())
-//                {
-//                    //찾고자 하는 ID값은 key로 존재하는 값
-//                    if(child.next().getKey().equals("walk_kcal"))
-//                    {
-//
-//                    }
-//
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-
-
     }
 
 
@@ -441,6 +378,5 @@ public class Frag_Activity extends Fragment {
         Log.e("onResume", "onResume: onResumeon Resume");
         super.onResume();
         firebase();
-        Totalkcal();
     }
 }

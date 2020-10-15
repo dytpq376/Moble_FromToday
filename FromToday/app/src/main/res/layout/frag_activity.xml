@@ -99,22 +99,22 @@
 
 
 
-                        <LinearLayout
-                            android:id="@+id/view_page"
+                    <LinearLayout
+                        android:id="@+id/view_page"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+
+                        <androidx.viewpager.widget.ViewPager
+                            android:id="@+id/view_pager"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
+                            android:layout_height="200dp">
+
+                        </androidx.viewpager.widget.ViewPager>
 
 
-                            <androidx.viewpager.widget.ViewPager
-                                android:id="@+id/view_pager"
-                                android:layout_width="match_parent"
-                                android:layout_height="200dp">
-
-                            </androidx.viewpager.widget.ViewPager>
-
-
-                        </LinearLayout>
+                    </LinearLayout>
 
 
                 </LinearLayout>
@@ -190,7 +190,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginRight="3dp"
-                                   />
+                                    android:src="@drawable/img_walk" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -231,7 +231,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginRight="3dp"
-                                    />
+                                    android:src="@drawable/img_run" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -272,7 +272,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginRight="3dp"
-                                    />
+                                    android:src="@drawable/img_bike" />
 
                                 <TextView
                                     android:layout_width="wrap_content"

@@ -21,8 +21,8 @@
         android:icon="@drawable/run"
         android:enabled="true"/>
     <item
-        android:id="@+id/people"
-        android:title="People"
+        android:id="@+id/rank"
+        android:title="Rank"
         android:icon="@drawable/people"
         android:enabled="true"/>
 </menu>

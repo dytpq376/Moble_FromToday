@@ -105,6 +105,9 @@ public class Frag_Activity extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
 
 
+    double sum_all;
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -295,6 +298,13 @@ public class Frag_Activity extends Fragment {
         Log.e("bike_sumkcal", String.valueOf(bike_sumkcal));
         total_sumkcal = walk_sumkcal + run_sumkcal + bike_sumkcal;
 
+
+        //파이어베이스에 올라갈 일주일치 총 소모 칼로리
+        sum_all = chart_sundayKcal + chart_mondayKcal + chart_tuesdayKcal + chart_wednesdayKcal + chart_thursdayKcal + chart_fridayKcal + chart_saturdayKcal ;
+
+        Totalkcal();
+
+
         //달력 날자 받아오기
         Calendar calendar = Calendar.getInstance(); //캘린더 인스턴스 받아오기
         //Calendar.DAY_OF_WEEK로 오늘 요일을 받아온후 변수에 저장해준다 이 변수는 오늘 요일이다.
@@ -375,6 +385,19 @@ public class Frag_Activity extends Fragment {
             // BarChar 애니메이션 효과로 시작
             mBarChart.startAnimation();
         }
+    }
+
+    private void Totalkcal(){
+
+        user_Value = getActivity().getSharedPreferences("currentUser", MODE_PRIVATE);
+        String strEmail = user_Value.getString("email", null);
+        strEmail = strEmail.replaceAll("@", "").replaceAll("[.]", "");
+        mPostReference = FirebaseDatabase.getInstance().getReference();
+
+//        Tkcal = new FirebasePost(total_sumkcal);
+        mPostReference.child("users").child(strEmail).child("total_kcal").setValue(sum_all);
+
+
     }
 
 

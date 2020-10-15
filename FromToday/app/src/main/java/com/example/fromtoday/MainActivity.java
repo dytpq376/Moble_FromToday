@@ -1,13 +1,9 @@
 package com.example.fromtoday;
 
-import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -28,7 +24,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.Calendar;
 import java.util.Iterator;
 
 public class MainActivity extends AppCompatActivity {
@@ -37,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int FRAGMENT_SLEEP = 1;
     private static final int FRAGMENT_HOME = 2;
     private static final int FRAGMENT_ACTIVITY = 3;
-    private static final int FRAGMENT_PEOPLE = 4;
+    private static final int FRAGMENT_RANK = 4;
 
     // 네비게이션 사용을 위한 선언
     private BottomNavigationView bottomNavigationView; // 바텀 네비게이션 뷰
@@ -49,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private Frag_Sleep fragSleep;
     private Frag_Home fragHome;
     private Frag_Activity fragActivity;
-    private Frag_People fragPeople;
+    private Frag_Rank fragRank;
 
     private LinearLayout info;
     private ImageView menu;
@@ -101,8 +96,8 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.activity:
                         setFrag(FRAGMENT_ACTIVITY);
                         break;
-                    case R.id.people:
-                        setFrag(FRAGMENT_PEOPLE);
+                    case R.id.rank:
+                        setFrag(FRAGMENT_RANK);
                         break;
                 }
                 return true;
@@ -113,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         fragSleep = new Frag_Sleep();
         fragHome = new Frag_Home();
         fragActivity = new Frag_Activity();
-        fragPeople = new Frag_People();
+        fragRank = new Frag_Rank();
         //foodDataActivity=new FoodDataActivity();
         // 첫 프래그먼트 화면을 무엇으로 지정해줄 것인지
         setFrag(FRAGMENT_HOME);
@@ -185,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
 //                FragmentManager fm = getSupportFragmentManager();
 //                FragmentTransaction ft = fm.beginTransaction();
 //                ft.replace(R.id.main_frame,people).commit();
-                ft.replace(R.id.main_frame, fragPeople);
+                ft.replace(R.id.main_frame, fragRank);
                 ft.commit();
                 break;
         }

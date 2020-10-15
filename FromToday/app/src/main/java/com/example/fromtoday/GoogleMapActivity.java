@@ -157,6 +157,8 @@ public class GoogleMapActivity extends AppCompatActivity
                     @Override
                     public void onSuccess(Long result) {
                         //회원탈퇴 성공 시 동작.
+                        Intent intent = new Intent(GoogleMapActivity.this,Login.class);
+                        startActivity(intent);
                     }
                 });
             }

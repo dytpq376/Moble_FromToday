@@ -92,7 +92,8 @@
                             android:layout_height="25dp"
                             android:layout_margin="3dp"
                             android:adjustViewBounds="true"
-                            android:src="@drawable/people" />
+                            android:src="@drawable/people"
+                            android:tint="@color/Blue"/>
                         <TextView
                             android:id="@+id/textChart"
                             android:layout_width="wrap_content"
@@ -307,7 +308,8 @@
                         android:layout_height="25dp"
                         android:layout_margin="3dp"
                         android:adjustViewBounds="true"
-                        app:srcCompat="@drawable/map" />
+                        app:srcCompat="@drawable/map"
+                        android:tint="@color/Orange"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -319,18 +321,20 @@
                         android:textSize="15dp" />
 
                     <LinearLayout
+                        android:layout_marginRight="5dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="right">
 
                         <ImageView
+                            android:tint="@color/Black"
                             android:id="@+id/search"
                             android:layout_width="wrap_content"
                             android:layout_height="35dp"
                             android:background="#FFFFFF"
                             android:text="검색"
                             android:textColor="#000000"
-                            app:srcCompat="@drawable/search" />
+                            app:srcCompat="@drawable/places_ic_search" />
                     </LinearLayout>
 
                 </LinearLayout>

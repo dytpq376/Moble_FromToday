@@ -82,6 +82,36 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
     private static final int MALE = 2500;
     private static final int FEMALE = 2000;
 
+
+    //칼로리 계산
+//    public int calrorieSum() {
+//        int total = 0;
+//        int keySetting = 0;
+//        //receive hashmap 의 키값
+//        Set set = Map_Breakfast.keySet();
+//        Iterator iterator = set.iterator();
+//        //receive에서 받아온 키 값을 저장해줄 key String 배열
+//        String[] key = new String[2];
+//        //hashmap 안에 null 값일 때 까지 iterator 인테페이스로 순차적 탐색
+//        while (iterator.hasNext()) {
+//            //key String 배열 초기화
+//            key[keySetting] = (String) iterator.next();
+//            keySetting++;
+//        }
+//        for (int i = 0; i < DB_Size; i++) {
+//            String id = rtList.get(i).getId();
+//            System.out.println(Map_Breakfast.keySet());
+//            for (int j = 0; j < Map_Breakfast.size(); j++) {
+//                if (id.equals(key[j])) {
+//                    //칼로리 계산
+//                    total += Integer.parseInt(rtList.get(i).getCalorie());
+//                }
+//            }
+//        }
+//        return total;
+//    }
+
+
     private View view;
     private ProgressBar progress;
     //식단 내용, 식단 값
@@ -114,6 +144,9 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
     int lunchKcal;
     int dinnerKcal;
     int totalSum = 0;
+    String alarmMessage;
+
+
 
     String email;
     String  gender;
@@ -125,17 +158,21 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
 
     private Boolean alarmCall = false;
     private BarChart mBarChart;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        //사용할 xml id 선언
         view = inflater.inflate(R.layout.frag_food, container, false);
+        //initLoadDB();
+
+        //foodService = FoodService.getInstance();
+
         morning = view.findViewById(R.id.morning);
         morningfood = view.findViewById(R.id.morningfood);
         morningcalrorie = view.findViewById(R.id.morningcalrorie);
+
         afternoon = view.findViewById(R.id.afternoon);
         afternoonfood = view.findViewById(R.id.afternoonfood);
         afternoonclarorie = view.findViewById(R.id.afternooncalrorie);
+
         dinner = view.findViewById(R.id.dinner);
         dinnerfood = view.findViewById(R.id.dinnerfood);
         dinnercalrorie = view.findViewById(R.id.dinnercalrorie);
@@ -144,10 +181,9 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
         progress = view.findViewById(R.id.progress);
         tvbartext = view.findViewById(R.id.tvbartext);
         mBarChart = (BarChart)view.findViewById(R.id.tab1_chart_2);
-        //Frag_Food에서 사용할 SharedPreferences 저장소
+
         currentUser = getActivity().getSharedPreferences("currentUser",getActivity().MODE_PRIVATE);
         dayKcal = getActivity().getSharedPreferences("dayKcal",getActivity().MODE_PRIVATE);
-
         //searchFood();
         if (getMenu_Food() == null || Menu_Food.size() == 0) {
             System.out.println(getMenu_Food());
@@ -168,13 +204,11 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
     }
     //서비스 내부로 Set 되어 스텝카운트의 변화와 Unbind 의 결과를 전달하는 콜백 객체의 구현체
     private FoodCallback foodCallback = new FoodCallback() {
-        //FoodService 에서 callback 을 받아 fragement 화면 초기화
+
         @Override
         public void onFoodCallback(int iNIT_DATA) {
             Log.d("sung",""+iNIT_DATA);
-            //call back boolean 값
             alarmCall = true;
-            //fragment 화면 초기화
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.detach(Frag_Food.this).attach(Frag_Food.this).commit();
         }
@@ -197,6 +231,12 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
             foodService = mb.getService();
             foodService.setCallback(foodCallback);
 
+//            dayKcal = getActivity().getSharedPreferences("dayKcal",getActivity().MODE_PRIVATE);
+//            SharedPreferences.Editor editor = dayKcal.edit();
+//            editor.remove("mondayKcal");
+//            editor.apply();
+
+            //setBarChart();
         }
         // 사실상 서비스가 킬되거나 아예 죽임 당했을 때만 호출된다고 보면 됨
         @Override
@@ -205,7 +245,6 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
             Toast.makeText(getActivity(), "디스바인딩", Toast.LENGTH_SHORT).show();
         }
     };
-    //Frag_Food onclick listener
     @Override
             public void onClick(View view) {
                 int requestCode = 0;
@@ -224,8 +263,6 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
 
                     case R.id.foodclear:
                         clearFood();
-                        FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        ft.detach(Frag_Food.this).attach(Frag_Food.this).commit();
                         return;
 
                     default:
@@ -247,9 +284,49 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
         System.out.println("gender value:"+email);
 
         searchFood();
+
+//        alarmMessage = getArguments().getString("alarmMessage");
+//        if(alarmMessage.equals("alarmMessage")) {
+//            Log.i("sung","bundlevalue:"+alarmMessage);
+//        }
         doDayOfTheWeek();
         setBarChart();
+        //SharedPreferences.Editor editor = pref.edit();
 
+//        if (getMenu_Food() == null || Menu_Food.size() == 0) {
+//            System.out.println(getMenu_Food());
+//        }
+//        if(breakfast==null||pre.getString("breakfast",null)==null){
+//           System.out.println("null");
+//        }
+//        else{
+//            System.out.println("아침식사:"+breakfast);
+//            morning.setText("다시짜기");
+//            morningfood.setText("");
+//            morningfood.append(pre.getString("breakfast",null)+pre.getString("user_Breakfast",null));
+//            morningcalrorie.setText("아침식단 칼로리:"+pre.getString("brakfastCalrorie",null)+"kcal");
+//
+//    }
+//        if(lunch_Menu==null||pre.getString("lunch_Menu",null)==null){
+//            System.out.println("null");
+//        }
+//        else{
+//            afternoon.setText("다시짜기");
+//            afternoonfood.setText("");
+//            afternoonfood.append(pre.getString("lunch_Menu",null)+pre.getString("user_Lunch",null));
+//            afternoonclarorie.setText("점심식단 칼로리:"+pre.getString("lunch_MenuCalrorie",null)+"kcal");
+//
+//        }
+//        if(dinner_Menu==null||pre.getString("dinner_Menu",null)==null){
+//            System.out.println("null");
+//        }
+//        else{
+//            dinner.setText("다시짜기");
+//            dinnerfood.setText("");
+//            dinnerfood.append(pre.getString("dinner_Menu",null)+pre.getString("user_Dinner",null));
+//            dinnercalrorie.setText("저녁식단 칼로리:"+pre.getString("dinner_MenuCalrorie",null)+"kcal");
+//
+//        }
 
     }
 
@@ -305,7 +382,6 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
         morningfood.setText("");
         afternoonfood.setText("");
         dinnerfood.setText("");
-
         if(pre.getString("breakfast",null)!= null && pre.getString("user_Breakfast",null) != null){
             morningfood.append("   "+pre.getString("breakfast",null) + pre.getString("user_Breakfast",null));
             morningcalrorie.setText(pre.getString("brakfastCalrorie",null) + "kcal");
@@ -335,7 +411,6 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
 
 
     }
-    //식단 초기화
     private void clearFood() {
         SharedPreferences.Editor editor = pre.edit();
 
@@ -368,7 +443,6 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
         lunchKcal = 0;
         dinnerKcal = 0;
     }
-    //내장 db 식단 칼로리 계산
     public int FoodCalrorieSum() {
         int sum=0;
         for(int i = 0 ; i<Menu_Food.size();i++) {
@@ -377,7 +451,6 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
         sum += UserCalrorieSum();
         return sum;
     }
-    //사용자 추가 식단 칼로리 계산
     public int UserCalrorieSum() {
         int total = 0;
         for(int i = 0 ; i<UserCalrorie.size(); i++) {
@@ -385,7 +458,6 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
         }
         return total;
     }
-    // 칼로리 프로그레스바 초기화
     private void setProgressBar() {
 
         if(gender.equals("male")){
@@ -399,8 +471,35 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
             progress.setProgress(totalSum);
         }
     }
-    // 날짜별 막대 그래프
+
     private void setBarChart() {
+/*        // 파이 차트 데이터 초기화
+        chartWalk.clearChart();
+        // 파이 차트에 데이터 추가
+        chartWalk.addPieSlice(new PieModel(WalkCount + " / 6000 걸음", 100, Color.parseColor(Colors.GRAY)));
+        chartWalk.addPieSlice(new PieModel("내 활동", 6, Color.parseColor(Colors.GRAY)));
+        // 파이차트 애니메이션 시작
+        chartWalk.startAnimation();*/
+        // BarChar 초기화
+//        if(dayKcal != null ) {
+//            dayKcal = getActivity().getSharedPreferences("dayKcal",getActivity().MODE_PRIVATE);
+//            int mondayKcal = dayKcal.getInt("mondayKcal",0);
+//            Log.d("setBarChart value:",""+mondayKcal);
+//            mBarChart.clearChart();
+//            // BarChar 데이터 입력
+//            mBarChart.addBar(new BarModel("일", mondayKcal, 0xFFCff0DA));
+//            mBarChart.addBar(new BarModel("월", mondayKcal, 0xFF88DBA3));
+//            mBarChart.addBar(new BarModel("화", mondayKcal, 0xFF90C695));
+//            mBarChart.addBar(new BarModel("수", mondayKcal, 0xFF3B8686));
+//            mBarChart.addBar(new BarModel("목", mondayKcal, 0xFF3AC569));
+//            mBarChart.addBar(new BarModel("금", mondayKcal, 0xFF3B8686));
+//            mBarChart.addBar(new BarModel("토", mondayKcal, 0xFFCFF09E));
+//            // BarChar 애니메이션 효과로 시작
+//            mBarChart.startAnimation();
+//        }
+//        if(call == true) {
+//            totalSum = 0;
+//        }
         dayKcal = getActivity().getSharedPreferences("dayKcal",getActivity().MODE_PRIVATE);
 
         if(mBarChart != null) {
@@ -411,8 +510,6 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
             int friday = dayKcal.getInt("friday",0);
             int saturday = dayKcal.getInt("saturday",0);
             int sunday = dayKcal.getInt("sunday",0);
-            Log.i("sung","monday"+monday);
-            Log.i("sung","sunday"+sunday);
             //int mondayKcal = totalSum;
             //Log.d("setBarChart value:",""+mondayKcal);
             mBarChart.clearChart();
@@ -451,7 +548,7 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
                     editor.remove("thursday");
                     editor.remove("friday");
                     editor.remove("saturday");
-                    editor.commit();
+                    editor.apply();
                 }
                 alarmCall = false;
                 break;
@@ -460,7 +557,7 @@ public class Frag_Food extends Fragment implements View.OnClickListener {
                 editor.putInt("monday",monday);
                 editor.apply();
                 alarmCall = false;
-                Log.i("Geon", "mondayKcal : "+monday );
+                Log.i("Geon", "mondayKcal : " );
                 break;
             case 3:
                 int tuesday = dayKcal.getInt("dayKcal",0);

@@ -39,4 +39,3 @@ public class FirebasePost {
         return result;
     }
 }
-

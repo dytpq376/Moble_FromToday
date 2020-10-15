@@ -8,6 +8,7 @@ import android.util.SparseBooleanArray;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -24,7 +25,7 @@ public class FoodDataActivity extends AppCompatActivity implements View.OnClickL
     private ListView DBListView;
     private ListView userListView;
     //추가
-    private ImageView add;
+    private Button add;
     private ImageView useradd;
     private ImageView userdelete;
     private ImageView back;
@@ -137,11 +138,9 @@ public class FoodDataActivity extends AppCompatActivity implements View.OnClickL
     public boolean onTouch(View view, MotionEvent motionEvent) {
         switch (view.getId()){
             case R.id.UserListView:
-                Log.e("UserListView", "UserListViewUserListViewUserListView: ");
                 userscroll.requestDisallowInterceptTouchEvent(true);
                 break;
             case R.id.DBListView:
-                Log.e("DBListView", "DBListViewDBListViewDBListView: ");
                 dbscroll.requestDisallowInterceptTouchEvent(true);
                 break;
         }

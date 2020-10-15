@@ -218,6 +218,7 @@ public class FoodService extends Service {
             case 1:
                 int sunday = dayKcal.getInt("dayKcal",0);
                 editor.putInt("sunday",sunday);
+                editor.apply();
                 Log.i("Geon", "sundayKcal : " );
                 if(alarmCheck == true) {
                     editor = dayKcal.edit();
@@ -234,37 +235,37 @@ public class FoodService extends Service {
             case 2:
                 int monday = dayKcal.getInt("dayKcal",0);
                 editor.putInt("monday",monday);
-                editor.commit();
+                editor.apply();
                 Log.i("Geon", "mondayKcal : " );
                 break;
             case 3:
                 int tuesday = dayKcal.getInt("dayKcal",0);
                 editor.putInt("tuesday",tuesday);
-                editor.commit();
+                editor.apply();
                 Log.i("Geon", "tuesdayKcal : " );
                 break;
             case 4:
                 int wednesday = dayKcal.getInt("dayKcal",0);
                 editor.putInt("wednesday",wednesday);
-                editor.commit();
+                editor.apply();
                 Log.i("Geon", "wednesdayKcal : " );
                 break;
             case 5:
                 int thursday = dayKcal.getInt("dayKcal",0);
                 editor.putInt("thursday",thursday);
-                editor.commit();
+                editor.apply();
                 Log.i("Geon", "thursdayKcal : "+thursday );
                 break;
             case 6:
                 int friday = dayKcal.getInt("dayKcal",0);
                 editor.putInt("friday",friday);
-                editor.commit();
+                editor.apply();
                 Log.i("Geon", "fridayKcal : ");
                 break;
             case 7:
                 int saturday = dayKcal.getInt("dayKcal",0);
                 editor.putInt("saturday",saturday);
-                editor.commit();
+                editor.apply();
                 Log.i("Geon", "saturdayKcal : " );
                 break;
         }

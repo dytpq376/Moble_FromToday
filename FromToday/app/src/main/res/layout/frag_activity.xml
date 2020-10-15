@@ -101,26 +101,17 @@
 
                         <LinearLayout
                             android:id="@+id/view_page"
-                            android:fillViewport="true"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
 
 
-<!--                            <ScrollView-->
-<!--                                android:fillViewport="true"-->
-<!--                                android:layout_width="match_parent"-->
-<!--                                android:layout_height="200dp">-->
+                            <androidx.viewpager.widget.ViewPager
+                                android:id="@+id/view_pager"
+                                android:layout_width="match_parent"
+                                android:layout_height="200dp">
 
-                                <androidx.viewpager.widget.ViewPager
-                                    android:id="@+id/view_pager"
-                                    android:fillViewport="true"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="200dp">
-
-                                </androidx.viewpager.widget.ViewPager>
-
-<!--                            </ScrollView>-->
+                            </androidx.viewpager.widget.ViewPager>
 
 
                         </LinearLayout>
@@ -405,5 +396,6 @@
                 android:layout_height="70dp" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
 
 </LinearLayout>

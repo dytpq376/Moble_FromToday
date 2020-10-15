@@ -26,12 +26,10 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
@@ -87,7 +85,7 @@ import java.util.Calendar;
  * 통지. 이렇게 하면 통지가 해제되고 서비스가 중지된다.
  */
 public class Activity_Walk extends AppCompatActivity implements
-        SharedPreferences.OnSharedPreferenceChangeListener {
+        SharedPreferences.OnSharedPreferenceChangeListener  {
     private static final String TAG = Activity_Run.class.getSimpleName();
 
     // 런타임 권한을 확인하는 데 사용됨.

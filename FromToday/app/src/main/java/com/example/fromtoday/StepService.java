@@ -71,8 +71,8 @@ public class StepService extends Service implements SensorEventListener {
 
     // AlarmManager Calendar 상수
     private static final int REQUEST_CODE = 3333;
-    private static final int ALARM_HOUR = 11;
-    private static final int ALARM_MIN = 42;
+    private static final int ALARM_HOUR = 23;
+    private static final int ALARM_MIN = 59;
     private static final int ALARM_SECOND = 0;
 
     AlarmManager alarmMgr;

@@ -43,9 +43,9 @@
         <activity android:name=".Stt"></activity>
 
         <!--    액티비티 이동 선언 입니다-->
-        <activity android:name=".Activity_Walk"></activity>
-        <activity android:name=".Activity_Run"></activity>
-        <activity android:name=".Activity_Bike"></activity>
+        <activity android:name=".Activity_Map"></activity>
+        <activity android:name=".Activity_Map_Run"></activity>
+        <activity android:name=".Activity_Map_Bike"></activity>
         <!-- Alarm Activity -->
         <activity android:name=".AlarmActivity"/>
         <!-- Alarm Manager -->

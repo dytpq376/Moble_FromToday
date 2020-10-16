@@ -104,9 +104,7 @@ public class Frag_Activity extends Fragment {
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
-    private boolean walk_pumission;
-    private boolean run_pumission;
-    private boolean bike_pumission;
+    private double sum_all;
 
 
     @Nullable
@@ -124,13 +122,7 @@ public class Frag_Activity extends Fragment {
 
         viewPager = view.findViewById(R.id.view_pager);
 
-        btn_walk.setVisibility(View.VISIBLE);
-        btn_run.setVisibility(View.VISIBLE);
-        btn_bike.setVisibility(View.VISIBLE);
 
-        walk_pumission=false;
-        run_pumission=false;
-        bike_pumission=false;
 
 
         //스크롤 뷰
@@ -148,9 +140,8 @@ public class Frag_Activity extends Fragment {
             public void onClick(View v) {
                 Intent intent1 = new Intent(getActivity(), Activity_Map.class);
                 startActivity(intent1);
-                btn_run.setVisibility(View.INVISIBLE);
-                btn_bike.setVisibility(View.INVISIBLE);
-                walk_pumission = true;
+//                btn_run.setEnabled(false);
+//                btn_bike.setEnabled(false);
             }
         });
 
@@ -159,9 +150,8 @@ public class Frag_Activity extends Fragment {
             public void onClick(View v) {
                 Intent intent2 = new Intent(getActivity(), Activity_Map_Run.class);
                 startActivity(intent2);
-                btn_walk.setVisibility(View.INVISIBLE);
-                btn_bike.setVisibility(View.INVISIBLE);
-                run_pumission = true;
+//                btn_walk.setEnabled(false);
+//                btn_bike.setEnabled(false);
             }
         });
 
@@ -170,9 +160,9 @@ public class Frag_Activity extends Fragment {
             public void onClick(View v) {
                 Intent intent3 = new Intent(getActivity(), Activity_Map_Bike.class);
                 startActivity(intent3);
-                btn_walk.setVisibility(View.INVISIBLE);
-                btn_run.setVisibility(View.INVISIBLE);
-                bike_pumission = true;
+//                btn_walk.setEnabled(false);
+//                btn_run.setEnabled(false);
+
             }
         });
 
@@ -235,18 +225,12 @@ public class Frag_Activity extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //시작전 초기화
-                Log.e("onDataChange", "onDataChange" );
                 AL_DTO_walk.clear();
                 AL_DTO_run.clear();
                 AL_DTO_bike.clear();
                 walk_sumkcal = 0;
                 run_sumkcal = 0;
                 bike_sumkcal = 0;
-                walk_pumission = false;
-                run_pumission = false;
-                bike_pumission = false;
-
-
                 for (DataSnapshot activity_snapshot : dataSnapshot.getChildren()) {
                     Log.e("키1", activity_snapshot.getKey());
                     for (DataSnapshot snapshot : activity_snapshot.getChildren()) {
@@ -256,9 +240,11 @@ public class Frag_Activity extends Fragment {
                         if (activity_snapshot.getKey() != null) {
 
                             if (activity_snapshot.getKey().equals("run_activity")) {
-                                if (activity_dto.getRun_Week().equals(String.valueOf(calendar_week))) {//요일별 칼로리를 뽑아내는 로직
-                                    AL_DTO_run.add(Double.parseDouble(activity_dto.getRun_kcal()));//만약 저장된 요일값과 오늘 요일이 같다면, kcal를 합산하여
-                                    Log.e("AL_DTO_run", String.valueOf(AL_DTO_run.size()));//sumkcal를 계산하여, 저장한다.
+                                if(activity_dto.getRun_Week()!=null) {
+                                    if (activity_dto.getRun_Week().equals(String.valueOf(calendar_week))) {//요일별 칼로리를 뽑아내는 로직
+                                        AL_DTO_run.add(Double.parseDouble(activity_dto.getRun_kcal()));//만약 저장된 요일값과 오늘 요일이 같다면, kcal를 합산하여
+                                        Log.e("AL_DTO_run", String.valueOf(AL_DTO_run.size()));//sumkcal를 계산하여, 저장한다.
+                                    }
                                 }
                             }
 
@@ -390,31 +376,56 @@ public class Frag_Activity extends Fragment {
         }
     }
 
+    private void Totalkcal(){
+
+        sum_all = chart_sundayKcal + chart_mondayKcal + chart_tuesdayKcal + chart_wednesdayKcal + chart_thursdayKcal + chart_fridayKcal + chart_saturdayKcal ;
+
+
+        user_Value = getActivity().getSharedPreferences("currentUser", MODE_PRIVATE);
+        String strEmail = user_Value.getString("email", null);
+        strEmail = strEmail.replaceAll("@", "").replaceAll("[.]", "");
+        mPostReference = FirebaseDatabase.getInstance().getReference();
+//        addAllKcal = FirebaseDatabase.getInstance().getReference("activity");
+
+//        Tkcal = new FirebasePost(total_sumkcal);
+        mPostReference.child("users").child(strEmail).child("total_kcal").setValue(sum_all);
+
+//        addAllKcal.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                Iterator<DataSnapshot> child = dataSnapshot.getChildren().iterator();
+//
+//                while(child.hasNext())
+//                {
+//                    //찾고자 하는 ID값은 key로 존재하는 값
+//                    if(child.next().getKey().equals("walk_kcal"))
+//                    {
+//
+//                    }
+//
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+
+
+    }
+
+
+
+
+
 
     @Override
     public void onResume() {
         Log.e("onResume", "onResume: onResumeon Resume");
         super.onResume();
-
-        if(walk_pumission == true){
-            Log.e("walk_pumission", String.valueOf(walk_pumission));
-            btn_run.setVisibility(View.INVISIBLE);
-            btn_bike.setVisibility(View.INVISIBLE);
-        }
-
-
-        if(run_pumission == true){
-            Log.e("run_pumission", String.valueOf(run_pumission));
-            btn_walk.setVisibility(View.INVISIBLE);
-            btn_bike.setVisibility(View.INVISIBLE);
-        }
-
-        if(bike_pumission == true){
-            Log.e("bike_pumission", String.valueOf(bike_pumission));
-            btn_run.setVisibility(View.INVISIBLE);
-            btn_walk.setVisibility(View.INVISIBLE);
-        }
-
         firebase();
+        Totalkcal();
     }
 }

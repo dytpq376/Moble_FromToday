@@ -146,11 +146,6 @@ public class Login extends AppCompatActivity {
 
                 @Override
                 public void onSuccess(MeV2Response result) {
-//                    Frag_People people = new Frag_People();
-//                    Bundle bundle =new Bundle();
-//                    bundle.putString("profile",result.getProfileImagePath());
-//                    bundle.putString("name",result.getNickname());
-//                    people.setArguments(bundle);
 
                     user_Value = getSharedPreferences("currentUser",MODE_PRIVATE);
                     SharedPreferences.Editor editor = user_Value.edit();

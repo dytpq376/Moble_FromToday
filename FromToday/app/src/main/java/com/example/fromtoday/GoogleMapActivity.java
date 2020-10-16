@@ -683,8 +683,8 @@ public class GoogleMapActivity extends AppCompatActivity
                 .listener(GoogleMapActivity.this)
                 .key("AIzaSyAkURIuz7vD8AM8H2d1JnDhmZ7YwdxphLg")
                 .latlng(location.latitude, location.longitude)//현재 위치
-                .radius(2000) //500 미터 내에서 검색
-                .type(PlaceType.GYM) //음식점
+                .radius(2000) //2km 내에서 검색
+                .type(PlaceType.GYM) //gym
                 .build()
                 .execute();
 

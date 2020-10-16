@@ -258,20 +258,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void getText(){
 
-//            text_result = getSharedPreferences("result",MODE_PRIVATE);
-//            SharedPreferences.Editor editor = text_result.edit();
-//            String strResult = text_result.getString("result",null);
-//            System.out.println("maintext : " + strResult);
-//
-//        if(strResult.equals(move)) {
-//            setFrag(0);
-//            if(strResult!= null) {
-//                editor.remove("result");
-//            }
-//        }
-//        else {
-//            finish();
-//        }
         String text_result;
         Intent intent = getIntent();
         text_result = intent.getStringExtra("result");
@@ -345,12 +331,6 @@ public class MainActivity extends AppCompatActivity {
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
-
-//        text_result = getSharedPreferences("result",MODE_PRIVATE);
-//
-//        String strResult = text_result.getString("result",null);
-//
-//        Log.d("Maintext",strResult);
 
     }
 

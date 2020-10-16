@@ -65,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
     String main = "메인";
     String sleep = "수면";
     String activity = "운동";
+    String rank = "랭킹";
+    String rankk = "순위";
 
 
     @Override
@@ -278,9 +280,15 @@ public class MainActivity extends AppCompatActivity {
                 bottomNavigationView.setSelectedItemId(R.id.home);
             }
             if(text_result.contains(activity) == true) {
-                setFrag(0);
+                setFrag(3);
                 bottomNavigationView.setSelectedItemId(R.id.activity);
             }
+//            if(text_result.contains(rank)||text_result.contains(rankk) == true) {
+//                setFrag(4);
+//                bottomNavigationView.setSelectedItemId(R.id.rank);
+//            }
+
+
 
         }
 

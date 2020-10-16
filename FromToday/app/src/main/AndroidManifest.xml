@@ -15,9 +15,12 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- Background Service -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <!-- bluetooth Service-->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
 
     <application
         android:name=".GlobalApplication"

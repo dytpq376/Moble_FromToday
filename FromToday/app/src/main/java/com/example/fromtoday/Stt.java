@@ -133,7 +133,7 @@ public class Stt extends AppCompatActivity {
                 textView.setText(matches.get(i));
             }
 
-//            Log.d("text",matches.get(0));
+            Log.d("text",matches.get(0));
 
 
             Runnable runnable = new Runnable() {

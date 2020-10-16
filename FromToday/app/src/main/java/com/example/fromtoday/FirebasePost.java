@@ -39,9 +39,6 @@ public class FirebasePost {
 
     }
 
-    public FirebasePost(double total_kcal) {
-        this.total_kcal = total_kcal;
-    }
 
 
     @Exclude

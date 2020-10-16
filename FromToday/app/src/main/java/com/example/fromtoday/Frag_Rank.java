@@ -72,36 +72,32 @@ public class Frag_Rank extends Fragment {
     }
 
     public void getFirebaseDatabase(){
-//        mDatabase = FirebaseDatabase.getInstance();
-//        dataRef = mDatabase.getReference("users");
 
         ValueEventListener eventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                Log.e("getFirebaseDatabase", "key: " + dataSnapshot.getChildrenCount());
 
                 arrayData.clear();
                 arrayIndex.clear();
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                     String key = postSnapshot.getKey();
                     FirebasePost get = postSnapshot.getValue(FirebasePost.class);
+
+                    //소모 칼로리값이 없을경우 null로 나오는걸 0으로 바꿔줌
                     if(get.total_kcal == null){
                         get.total_kcal = Double.valueOf(0);
                     }
+
                     String[] info = {get.name, String.valueOf(get.total_kcal)};
                     String Result = setTextLength(info[0],10) + "          "+setTextLength(info[1],10)  ;
 
                     arrayData.add(0, Result);
                     arrayIndex.add(key);
-//                    Log.d("getFirebaseDatabase", "key: " + key);
-//                    Log.d("getFirebaseDatabase", "info: " + info[0] + info[1] + info[2]);
                 }
 
                 arrayAdapter.clear();
                 arrayAdapter.addAll(arrayData);
                 arrayAdapter.notifyDataSetChanged();
-
-//                Log.e("aaaaaaaaa", String.valueOf(arrayData));
             }
 
             @Override
@@ -131,7 +127,6 @@ public class Frag_Rank extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-//        System.out.println("여기는 onResume");
         getFirebaseDatabase();
 
     }
